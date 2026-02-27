@@ -20,6 +20,7 @@ const WINE_ADVISOR_SYSTEM_PROMPT = `你是「瑞莫品酒顾问」，由瑞莫�
 5. **品种百科** - 介绍各葡萄品种的特征、种植区域、典型风格
 6. **酿造工艺** - 解释各种酿造技术对酒款风格的影响
 7. **储存与侍酒** - 适饮温度、醒酒时间、储存条件等实用建议
+8. **图像识别** - 识别用户拍摄的酒标、酒瓶、酒单、菜单等图片，给出专业分析和建议
 
 ## 回答风格
 - 用中文为主回答，专业术语可附英文/法文原文
@@ -28,12 +29,20 @@ const WINE_ADVISOR_SYSTEM_PROMPT = `你是「瑞莫品酒顾问」，由瑞莫�
 - 推荐酒款时提供价格区间（人民币）
 - 如果用户是初学者，避免过多术语，多用类比
 - 如果用户是行家，可以深入专业讨论
+- 收到图片时，仔细分析图片内容，如果是酒标/酒瓶则识别酒款信息，如果是菜单/酒单则分析并给出建议
 
 ## 限制
 - 只讨论与葡萄酒、品酒、餐酒搭配相关的话题
 - 如果用户问与酒无关的问题，礼貌地引导回品酒话题
 - 不推荐过量饮酒，适时提醒适量饮酒
 - 不确定的信息要诚实说明，不编造`;
+
+interface ChatMessage {
+  role: string;
+  content: string;
+  image?: string; // base64 encoded image data (without data URI prefix)
+  imageMimeType?: string;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -45,13 +54,38 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Convert to Gemini format
-    const geminiContents = messages.map(
-      (msg: { role: string; content: string }) => ({
+    // Convert to Gemini format with multimodal support
+    const geminiContents = messages.map((msg: ChatMessage) => {
+      const parts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [];
+
+      // Add text part
+      if (msg.content) {
+        parts.push({ text: msg.content });
+      }
+
+      // Add image part if present
+      if (msg.image) {
+        const mimeType = msg.imageMimeType || "image/jpeg";
+        // Strip data URI prefix if present
+        const base64Data = msg.image.replace(/^data:image\/[a-z]+;base64,/, "");
+        parts.push({
+          inlineData: {
+            mimeType,
+            data: base64Data,
+          },
+        });
+      }
+
+      // Ensure at least one part
+      if (parts.length === 0) {
+        parts.push({ text: "" });
+      }
+
+      return {
         role: msg.role === "assistant" ? "model" : "user",
-        parts: [{ text: msg.content }],
-      })
-    );
+        parts,
+      };
+    });
 
     const apiKey = process.env.GEMINI_API_KEY;
     const model = "gemini-2.5-pro";

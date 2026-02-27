@@ -610,3 +610,125 @@ body {
 .quick-btn-animate {
   animation: quickBtnEnter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
+
+/* ═══ Action Sheet (bottom slide-up) ═══ */
+@keyframes actionSheetOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes actionSheetSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.action-sheet-overlay {
+  background-color: rgba(26, 10, 14, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: actionSheetOverlayIn 0.2s ease-out;
+}
+
+.action-sheet-content {
+  animation: actionSheetSlideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.action-sheet-card {
+  box-shadow: 0 -4px 20px rgba(114, 47, 55, 0.1);
+}
+
+.action-sheet-btn:active {
+  background-color: rgba(114, 47, 55, 0.06) !important;
+}
+
+/* ═══ Image preview bar ═══ */
+@keyframes imagePreviewIn {
+  from { opacity: 0; transform: scale(0.85) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.image-preview-bar {
+  animation: imagePreviewIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.image-preview-container {
+  transition: all 0.2s ease;
+}
+
+.image-preview-container:hover {
+  transform: scale(1.05);
+}
+
+.image-preview-remove {
+  transition: all 0.2s ease;
+}
+
+.image-preview-remove:hover {
+  transform: scale(1.15);
+  background-color: var(--wine-medium) !important;
+}
+
+/* ═══ Image loading spinner ═══ */
+@keyframes imageSpinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.image-loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--wine-light);
+  border-top-color: var(--wine-deep);
+  border-radius: 50%;
+  animation: imageSpinner 0.8s linear infinite;
+}
+
+/* ═══ Camera button ═══ */
+.camera-btn {
+  transition: all 0.25s ease;
+}
+
+.camera-btn:active:not(:disabled) {
+  transform: scale(0.88) !important;
+}
+
+.camera-btn:hover:not(:disabled) {
+  border-color: var(--wine-deep) !important;
+  background-color: rgba(114, 47, 55, 0.06) !important;
+}
+
+/* ═══ Lightbox ═══ */
+@keyframes lightboxOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lightboxImageIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.lightbox-overlay {
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: lightboxOverlayIn 0.25s ease-out;
+}
+
+.lightbox-image {
+  animation: lightboxImageIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ═══ Chat image thumbnail ═══ */
+.chat-image-thumb {
+  transition: all 0.25s ease;
+}
+
+.chat-image-thumb:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+.chat-image-thumb:active {
+  transform: scale(0.97);
+}

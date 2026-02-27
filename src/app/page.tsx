@@ -9,6 +9,8 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   isError?: boolean;
+  image?: string; // base64 encoded image (compressed)
+  imageMimeType?: string;
 }
 
 interface TasteProfile {
@@ -98,9 +100,19 @@ function loadMessages(): Message[] {
 
 function saveMessages(msgs: Message[]) {
   try {
+    // Try saving with images first
     localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs));
   } catch {
-    // quota exceeded — silently ignore
+    // Quota exceeded — try saving without image data
+    try {
+      const lightweight = msgs.map((m) => ({
+        ...m,
+        image: m.image ? "[图片已省略]" : undefined,
+      }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(lightweight));
+    } catch {
+      // Still too big — silently ignore
+    }
   }
 }
 
@@ -595,6 +607,185 @@ function TasteProfileSection({
   );
 }
 
+/* ─── Image compression utility ─── */
+function compressImage(file: File, maxWidth = 1024, quality = 0.7): Promise<{ base64: string; mimeType: string }> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let w = img.width;
+        let h = img.height;
+
+        if (w > maxWidth) {
+          h = Math.round((h * maxWidth) / w);
+          w = maxWidth;
+        }
+
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          reject(new Error("Canvas context not available"));
+          return;
+        }
+        ctx.drawImage(img, 0, 0, w, h);
+        const base64 = canvas.toDataURL("image/jpeg", quality);
+        resolve({ base64, mimeType: "image/jpeg" });
+      };
+      img.onerror = () => reject(new Error("Failed to load image"));
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
+/** Action Sheet for camera/gallery selection (mobile-friendly bottom sheet) */
+function ImageActionSheet({
+  onClose,
+  onCamera,
+  onGallery,
+}: {
+  onClose: () => void;
+  onCamera: () => void;
+  onGallery: () => void;
+}) {
+  return (
+    <div
+      className="action-sheet-overlay fixed inset-0 z-50"
+      onClick={onClose}
+    >
+      <div
+        className="action-sheet-content fixed bottom-0 left-0 right-0 z-50 px-4"
+        style={{ paddingBottom: "calc(1rem + var(--safe-bottom))" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="action-sheet-card rounded-2xl overflow-hidden mb-2" style={{ backgroundColor: "var(--wine-cream)" }}>
+          <div className="text-center py-3 border-b" style={{ borderColor: "var(--wine-light)" }}>
+            <p className="text-xs" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>
+              选择图片来源
+            </p>
+          </div>
+          <button
+            onClick={onCamera}
+            className="action-sheet-btn w-full py-4 flex items-center justify-center gap-3 border-b transition-colors"
+            style={{
+              fontFamily: "'Noto Serif SC', serif",
+              color: "var(--wine-deep)",
+              borderColor: "var(--wine-light)",
+              fontSize: "15px",
+            }}
+          >
+            <span className="text-xl">📷</span>
+            <span>拍照</span>
+          </button>
+          <button
+            onClick={onGallery}
+            className="action-sheet-btn w-full py-4 flex items-center justify-center gap-3 transition-colors"
+            style={{
+              fontFamily: "'Noto Serif SC', serif",
+              color: "var(--wine-deep)",
+              fontSize: "15px",
+            }}
+          >
+            <span className="text-xl">🖼️</span>
+            <span>从相册选择</span>
+          </button>
+        </div>
+        <button
+          onClick={onClose}
+          className="action-sheet-card w-full py-4 rounded-2xl text-center transition-colors"
+          style={{
+            fontFamily: "'Noto Serif SC', serif",
+            backgroundColor: "var(--wine-cream)",
+            color: "var(--wine-medium)",
+            fontSize: "15px",
+            fontWeight: 500,
+          }}
+        >
+          取消
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** Image preview thumbnail above input */
+function ImagePreviewBar({
+  imageSrc,
+  onRemove,
+}: {
+  imageSrc: string;
+  onRemove: () => void;
+}) {
+  return (
+    <div className="image-preview-bar px-4 pb-2">
+      <div className="image-preview-container inline-block relative">
+        <img
+          src={imageSrc}
+          alt="预览"
+          className="image-preview-thumb rounded-xl"
+          style={{
+            width: 72,
+            height: 72,
+            objectFit: "cover",
+            border: "2px solid var(--wine-light)",
+            boxShadow: "0 2px 12px rgba(114, 47, 55, 0.12)",
+          }}
+        />
+        <button
+          onClick={onRemove}
+          className="image-preview-remove absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
+          style={{
+            backgroundColor: "var(--wine-deep)",
+            boxShadow: "0 2px 6px rgba(114, 47, 55, 0.3)",
+          }}
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** Full-screen image lightbox */
+function ImageLightbox({
+  src,
+  onClose,
+}: {
+  src: string;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      className="lightbox-overlay fixed inset-0 z-50 flex items-center justify-center"
+      onClick={onClose}
+    >
+      <button
+        className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white text-lg z-10"
+        style={{
+          backgroundColor: "rgba(0,0,0,0.5)",
+          top: "calc(16px + var(--safe-top))",
+        }}
+        onClick={onClose}
+      >
+        ✕
+      </button>
+      <img
+        src={src}
+        alt="放大查看"
+        className="lightbox-image max-w-[92vw] max-h-[85vh] rounded-xl object-contain"
+        style={{
+          boxShadow: "0 8px 40px rgba(0,0,0,0.4)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      />
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════
    Main page component
    ═══════════════════════════════════════════ */
@@ -612,6 +803,10 @@ export default function Home() {
   });
   const [transitioning, setTransitioning] = useState(false);
   const [sendBtnAnimate, setSendBtnAnimate] = useState(false);
+  const [showActionSheet, setShowActionSheet] = useState(false);
+  const [pendingImage, setPendingImage] = useState<{ base64: string; mimeType: string } | null>(null);
+  const [imageLoading, setImageLoading] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
   /* ── Refs ── */
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -619,6 +814,8 @@ export default function Home() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const userScrolledRef = useRef(false);
   const lastUserMsgRef = useRef<string>("");
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
   /* ── P0: Load from localStorage on mount ── */
   useEffect(() => {
@@ -680,10 +877,34 @@ export default function Home() {
     }
   }, [input]);
 
+  /* ── Image handling ── */
+  const handleImageFile = async (file: File) => {
+    if (!file || !file.type.startsWith("image/")) return;
+    setImageLoading(true);
+    try {
+      const compressed = await compressImage(file);
+      setPendingImage(compressed);
+    } catch (err) {
+      console.error("Image compression failed:", err);
+    } finally {
+      setImageLoading(false);
+      setShowActionSheet(false);
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleImageFile(file);
+    // Reset input so same file can be selected again
+    e.target.value = "";
+  };
+
   /* ── Send message ── */
   const sendMessage = async (directMessage?: string) => {
     const text = directMessage || input.trim();
-    if (!text || isLoading) return;
+    const hasImage = !!pendingImage;
+    // Need either text or image to send
+    if ((!text && !hasImage) || isLoading) return;
 
     // Trigger send button animation
     if (!directMessage) {
@@ -699,20 +920,33 @@ export default function Home() {
       setTransitioning(false);
     }
 
-    lastUserMsgRef.current = text;
-    const userMessage: Message = { role: "user", content: text };
+    const messageText = text || (hasImage ? "请帮我分析这张图片" : "");
+    lastUserMsgRef.current = messageText;
+    const userMessage: Message = {
+      role: "user",
+      content: messageText,
+      ...(hasImage ? { image: pendingImage!.base64, imageMimeType: pendingImage!.mimeType } : {}),
+    };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput("");
+    setPendingImage(null);
     setIsLoading(true);
     setStreamingContent("");
     userScrolledRef.current = false;
 
     try {
+      // Prepare messages for API: include image data for the request
+      const apiMessages = newMessages.map((m) => ({
+        role: m.role,
+        content: m.content,
+        ...(m.image ? { image: m.image, imageMimeType: m.imageMimeType } : {}),
+      }));
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: apiMessages }),
       });
 
       if (!response.ok) {
@@ -1082,7 +1316,31 @@ export default function Home() {
                   )}
                 </>
               ) : (
-                msg.content
+                <>
+                  {msg.image && (
+                    <div className="mb-2">
+                      <img
+                        src={msg.image}
+                        alt="用户上传的图片"
+                        className="chat-image-thumb rounded-xl cursor-pointer"
+                        style={{
+                          maxWidth: "200px",
+                          maxHeight: "200px",
+                          objectFit: "cover",
+                          borderRadius: "12px",
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                        }}
+                        onClick={() => setLightboxImage(msg.image!)}
+                      />
+                    </div>
+                  )}
+                  {msg.content && !(msg.image && msg.content === "请帮我分析这张图片") && (
+                    <span>{msg.content}</span>
+                  )}
+                  {msg.image && msg.content === "请帮我分析这张图片" && (
+                    <span className="text-xs opacity-80">📷 请帮我分析这张图片</span>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -1142,21 +1400,120 @@ export default function Home() {
         <ScrollToBottomButton onClick={scrollToBottom} />
       )}
 
+      {/* Action Sheet */}
+      {showActionSheet && (
+        <ImageActionSheet
+          onClose={() => setShowActionSheet(false)}
+          onCamera={() => {
+            setShowActionSheet(false);
+            setTimeout(() => cameraInputRef.current?.click(), 100);
+          }}
+          onGallery={() => {
+            setShowActionSheet(false);
+            setTimeout(() => galleryInputRef.current?.click(), 100);
+          }}
+        />
+      )}
+
+      {/* Image Lightbox */}
+      {lightboxImage && (
+        <ImageLightbox
+          src={lightboxImage}
+          onClose={() => setLightboxImage(null)}
+        />
+      )}
+
+      {/* Hidden file inputs */}
+      <input
+        ref={cameraInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={handleFileInputChange}
+        className="hidden"
+      />
+      <input
+        ref={galleryInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileInputChange}
+        className="hidden"
+      />
+
       {/* Input Area */}
       <div
         className="footer-decorated px-4 py-4"
         style={{ paddingBottom: "calc(1.5rem + var(--safe-bottom))" }}
       >
+        {/* Image preview */}
+        {(pendingImage || imageLoading) && (
+          <div className="image-preview-bar pb-2">
+            {imageLoading ? (
+              <div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl"
+                style={{
+                  backgroundColor: "rgba(114, 47, 55, 0.06)",
+                  border: "1px solid var(--wine-light)",
+                }}
+              >
+                <div className="image-loading-spinner" />
+                <span
+                  className="text-xs"
+                  style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}
+                >
+                  处理图片中…
+                </span>
+              </div>
+            ) : pendingImage ? (
+              <ImagePreviewBar
+                imageSrc={pendingImage.base64}
+                onRemove={() => setPendingImage(null)}
+              />
+            ) : null}
+          </div>
+        )}
+
         <div
-          className="input-container flex items-end gap-3 rounded-2xl px-4 py-3"
+          className="input-container flex items-end gap-2 rounded-2xl px-3 py-3"
           style={{ backgroundColor: "white" }}
         >
+          {/* Camera button */}
+          <button
+            onClick={() => setShowActionSheet(true)}
+            disabled={isLoading}
+            className="camera-btn flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-30"
+            style={{
+              backgroundColor: pendingImage ? "var(--wine-deep)" : "transparent",
+              border: pendingImage ? "none" : "1.5px solid var(--wine-light)",
+            }}
+            title="拍照/选择图片"
+          >
+            <svg
+              className="w-[18px] h-[18px]"
+              fill="none"
+              stroke={pendingImage ? "white" : "var(--wine-deep)"}
+              strokeWidth={1.8}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"
+              />
+            </svg>
+          </button>
+
           <textarea
             ref={textareaRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="请问您想了解哪方面的葡萄酒知识？"
+            placeholder={pendingImage ? "添加说明（可选）" : "请问您想了解哪方面的葡萄酒知识？"}
             rows={1}
             className="flex-1 resize-none outline-none bg-transparent text-sm leading-relaxed sm:text-sm text-base"
             style={{
@@ -1167,13 +1524,13 @@ export default function Home() {
           />
           <button
             onClick={() => sendMessage()}
-            disabled={!input.trim() || isLoading}
+            disabled={(!input.trim() && !pendingImage) || isLoading}
             className={`send-btn flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-30 ${
               sendBtnAnimate ? "send-btn-fly" : ""
             }`}
             style={{
-              backgroundColor: input.trim() ? "var(--wine-deep)" : "var(--wine-light)",
-              boxShadow: input.trim() ? "0 2px 8px rgba(114, 47, 55, 0.3)" : "none",
+              backgroundColor: (input.trim() || pendingImage) ? "var(--wine-deep)" : "var(--wine-light)",
+              boxShadow: (input.trim() || pendingImage) ? "0 2px 8px rgba(114, 47, 55, 0.3)" : "none",
             }}
           >
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
