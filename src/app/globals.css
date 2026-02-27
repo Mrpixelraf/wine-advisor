@@ -21,8 +21,8 @@
   --wine-warning: #E8B84B;
   --wine-info: #5B8FB9;
   /* Gradients */
-  --gradient-tasting: linear-gradient(135deg, #8B2252 0%, #D4A56A 100%);
-  --gradient-evening: linear-gradient(180deg, #4A1942 0%, #1E1A2B 100%);
+  --gradient-tasting: linear-gradient(135deg, #8B2252 0%, #C9A96E 100%);
+  --gradient-evening: linear-gradient(180deg, #2A1520 0%, #0D0A0E 100%);
   /* Dark-mode-aware functional tokens */
   --wine-hover-bg: rgba(114, 47, 55, 0.08);
   --wine-hover-bg-strong: rgba(114, 47, 55, 0.12);
@@ -89,119 +89,119 @@ body {
 
 /* Dark mode — .dark class (primary, set by JS in layout.tsx) */
 .dark {
-  --wine-deep: #C75B8E;
-  --wine-medium: #A83A6A;
-  --wine-cream: #1E1A2B;
-  --wine-dark: #14111E;
-  --wine-text: #F0EDE8;
-  --wine-secondary-text: #6B6774;
-  --wine-border: #3A3548;
-  --wine-card: #2A2636;
-  --wine-bubble-text: #F0EDE8;
-  --wine-gold: #E0BA80;
-  --wine-accent: #E0BA80;
-  --wine-gold-warm: #E0BA80;
-  /* Dark functional tokens */
-  --wine-hover-bg: rgba(199, 91, 142, 0.12);
-  --wine-hover-bg-strong: rgba(199, 91, 142, 0.18);
-  --wine-subtle-bg: rgba(199, 91, 142, 0.10);
-  --wine-subtle-bg-lighter: rgba(199, 91, 142, 0.06);
-  --wine-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  --wine-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
-  --wine-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --wine-shadow-strong: 0 2px 8px rgba(0, 0, 0, 0.5);
-  --wine-shadow-xl: 0 8px 40px rgba(0, 0, 0, 0.5);
-  --wine-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.3);
-  --wine-overlay-bg: rgba(0, 0, 0, 0.6);
-  --wine-overlay-bg-strong: rgba(0, 0, 0, 0.7);
-  --wine-overlay-dark: rgba(0, 0, 0, 0.85);
-  --wine-overlay-btn: rgba(0, 0, 0, 0.6);
-  --wine-action-border: rgba(199, 91, 142, 0.15);
-  --wine-action-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.12), rgba(224, 186, 128, 0.15));
-  --wine-action-border-color: rgba(199, 91, 142, 0.2);
-  --wine-tag-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.12), rgba(224, 186, 128, 0.15));
-  --wine-tag-border: rgba(199, 91, 142, 0.18);
-  --wine-tag-hover-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.2), rgba(224, 186, 128, 0.25));
-  --wine-tag-active-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.3), rgba(224, 186, 128, 0.35));
-  --wine-recommend-bg: rgba(42, 38, 54, 0.8);
-  --wine-recommend-border: rgba(224, 186, 128, 0.3);
-  --wine-quick-btn-bg: rgba(42, 38, 54, 0.7);
-  --wine-empty-radial-1: rgba(199, 91, 142, 0.06);
-  --wine-empty-radial-2: rgba(224, 186, 128, 0.06);
-  --wine-glow-border: rgba(224, 186, 128, 0.5);
-  --wine-glow-shadow: 0 0 20px rgba(224, 186, 128, 0.3), inset 0 0 20px rgba(224, 186, 128, 0.08);
-  --wine-glow-shadow-pulse: 0 0 32px rgba(224, 186, 128, 0.5), inset 0 0 32px rgba(224, 186, 128, 0.15);
-  --wine-skip-color: rgba(255, 255, 255, 0.8);
-  --wine-skip-bg: rgba(255, 255, 255, 0.1);
-  --wine-skip-border: rgba(255, 255, 255, 0.2);
-  --wine-card-overlay-shadow: 0 16px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
-  --wine-img-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --wine-lightbox-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-  --wine-rating-low: #8A8690;
-  --wine-rating-mid: #E0BA80;
-  --wine-rating-high: #C75B8E;
-  --wine-disabled-bg: rgba(199, 91, 142, 0.06);
-  --wine-disabled-border: rgba(199, 91, 142, 0.1);
-  --wine-cellar-card-border: rgba(199, 91, 142, 0.1);
+  /* ═══ v0.6.1 Premium Dark Theme — Warm Black-Brown + Champagne Gold ═══ */
+  --wine-deep: #D4A07A;           /* warm rose-gold for primary accents */
+  --wine-medium: #8B3A5C;         /* muted burgundy mid-tone */
+  --wine-cream: #0D0A0E;          /* near-black with warm undertone */
+  --wine-dark: #080609;           /* true deep black */
+  --wine-text: #EDE8E2;           /* warm off-white text */
+  --wine-secondary-text: #7A7078; /* warm gray */
+  --wine-border: #2A2226;         /* dark warm border */
+  --wine-card: rgba(26, 20, 24, 0.65); /* semi-transparent for glassmorphism */
+  --wine-bubble-text: #EDE8E2;
+  --wine-gold: #C9A96E;           /* true champagne gold */
+  --wine-accent: #C9A96E;
+  --wine-gold-warm: #C9A96E;
+  /* Dark functional tokens — warmer, more transparent */
+  --wine-hover-bg: rgba(201, 169, 110, 0.10);
+  --wine-hover-bg-strong: rgba(201, 169, 110, 0.16);
+  --wine-subtle-bg: rgba(201, 169, 110, 0.06);
+  --wine-subtle-bg-lighter: rgba(201, 169, 110, 0.03);
+  --wine-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  --wine-shadow-md: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --wine-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --wine-shadow-strong: 0 2px 12px rgba(0, 0, 0, 0.6);
+  --wine-shadow-xl: 0 8px 48px rgba(0, 0, 0, 0.6);
+  --wine-shadow-card: 0 2px 16px rgba(0, 0, 0, 0.35);
+  --wine-overlay-bg: rgba(0, 0, 0, 0.65);
+  --wine-overlay-bg-strong: rgba(0, 0, 0, 0.75);
+  --wine-overlay-dark: rgba(0, 0, 0, 0.88);
+  --wine-overlay-btn: rgba(0, 0, 0, 0.65);
+  --wine-action-border: rgba(201, 169, 110, 0.12);
+  --wine-action-bg: linear-gradient(135deg, rgba(139, 58, 92, 0.15), rgba(201, 169, 110, 0.10));
+  --wine-action-border-color: rgba(201, 169, 110, 0.18);
+  --wine-tag-bg: linear-gradient(135deg, rgba(139, 58, 92, 0.12), rgba(201, 169, 110, 0.10));
+  --wine-tag-border: rgba(201, 169, 110, 0.15);
+  --wine-tag-hover-bg: linear-gradient(135deg, rgba(139, 58, 92, 0.22), rgba(201, 169, 110, 0.18));
+  --wine-tag-active-bg: linear-gradient(135deg, rgba(139, 58, 92, 0.32), rgba(201, 169, 110, 0.28));
+  --wine-recommend-bg: rgba(26, 20, 24, 0.7);
+  --wine-recommend-border: rgba(201, 169, 110, 0.25);
+  --wine-quick-btn-bg: rgba(26, 20, 24, 0.6);
+  --wine-empty-radial-1: rgba(139, 58, 92, 0.05);
+  --wine-empty-radial-2: rgba(201, 169, 110, 0.04);
+  --wine-glow-border: rgba(201, 169, 110, 0.45);
+  --wine-glow-shadow: 0 0 24px rgba(201, 169, 110, 0.25), inset 0 0 24px rgba(201, 169, 110, 0.06);
+  --wine-glow-shadow-pulse: 0 0 36px rgba(201, 169, 110, 0.4), inset 0 0 36px rgba(201, 169, 110, 0.12);
+  --wine-skip-color: rgba(255, 255, 255, 0.75);
+  --wine-skip-bg: rgba(255, 255, 255, 0.08);
+  --wine-skip-border: rgba(255, 255, 255, 0.15);
+  --wine-card-overlay-shadow: 0 20px 72px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(201, 169, 110, 0.08);
+  --wine-img-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  --wine-lightbox-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
+  --wine-rating-low: #7A7078;
+  --wine-rating-mid: #C9A96E;
+  --wine-rating-high: #D4A07A;
+  --wine-disabled-bg: rgba(201, 169, 110, 0.04);
+  --wine-disabled-border: rgba(201, 169, 110, 0.08);
+  --wine-cellar-card-border: rgba(201, 169, 110, 0.08);
 }
 
 /* Dark mode — @media fallback (when no .dark or .light class is set) */
 @media (prefers-color-scheme: dark) {
   :root:not(.light):not(.dark) {
-    --wine-deep: #C75B8E;
-    --wine-medium: #A83A6A;
-    --wine-cream: #1E1A2B;
-    --wine-dark: #14111E;
-    --wine-text: #F0EDE8;
-    --wine-secondary-text: #6B6774;
-    --wine-border: #3A3548;
-    --wine-card: #2A2636;
-    --wine-bubble-text: #F0EDE8;
-    --wine-gold: #E0BA80;
-    --wine-accent: #E0BA80;
-    --wine-gold-warm: #E0BA80;
-    /* Dark functional tokens */
-    --wine-hover-bg: rgba(199, 91, 142, 0.12);
-    --wine-hover-bg-strong: rgba(199, 91, 142, 0.18);
-    --wine-subtle-bg: rgba(199, 91, 142, 0.10);
-    --wine-subtle-bg-lighter: rgba(199, 91, 142, 0.06);
-    --wine-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    --wine-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
-    --wine-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4);
-    --wine-shadow-strong: 0 2px 8px rgba(0, 0, 0, 0.5);
-    --wine-shadow-xl: 0 8px 40px rgba(0, 0, 0, 0.5);
-    --wine-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.3);
-    --wine-overlay-bg: rgba(0, 0, 0, 0.6);
-    --wine-overlay-bg-strong: rgba(0, 0, 0, 0.7);
-    --wine-overlay-dark: rgba(0, 0, 0, 0.85);
-    --wine-overlay-btn: rgba(0, 0, 0, 0.6);
-    --wine-action-border: rgba(199, 91, 142, 0.15);
-    --wine-action-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.12), rgba(224, 186, 128, 0.15));
-    --wine-action-border-color: rgba(199, 91, 142, 0.2);
-    --wine-tag-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.12), rgba(224, 186, 128, 0.15));
-    --wine-tag-border: rgba(199, 91, 142, 0.18);
-    --wine-tag-hover-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.2), rgba(224, 186, 128, 0.25));
-    --wine-tag-active-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.3), rgba(224, 186, 128, 0.35));
-    --wine-recommend-bg: rgba(42, 38, 54, 0.8);
-    --wine-recommend-border: rgba(224, 186, 128, 0.3);
-    --wine-quick-btn-bg: rgba(42, 38, 54, 0.7);
-    --wine-empty-radial-1: rgba(199, 91, 142, 0.06);
-    --wine-empty-radial-2: rgba(224, 186, 128, 0.06);
-    --wine-glow-border: rgba(224, 186, 128, 0.5);
-    --wine-glow-shadow: 0 0 20px rgba(224, 186, 128, 0.3), inset 0 0 20px rgba(224, 186, 128, 0.08);
-    --wine-glow-shadow-pulse: 0 0 32px rgba(224, 186, 128, 0.5), inset 0 0 32px rgba(224, 186, 128, 0.15);
-    --wine-skip-color: rgba(255, 255, 255, 0.8);
-    --wine-skip-bg: rgba(255, 255, 255, 0.1);
-    --wine-skip-border: rgba(255, 255, 255, 0.2);
-    --wine-card-overlay-shadow: 0 16px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
-    --wine-img-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    --wine-lightbox-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-    --wine-rating-low: #8A8690;
-    --wine-rating-mid: #E0BA80;
-    --wine-rating-high: #C75B8E;
-    --wine-disabled-bg: rgba(199, 91, 142, 0.06);
-    --wine-disabled-border: rgba(199, 91, 142, 0.1);
-    --wine-cellar-card-border: rgba(199, 91, 142, 0.1);
+    --wine-deep: #D4A07A;
+    --wine-medium: #8B3A5C;
+    --wine-cream: #0D0A0E;
+    --wine-dark: #080609;
+    --wine-text: #EDE8E2;
+    --wine-secondary-text: #7A7078;
+    --wine-border: #2A2226;
+    --wine-card: rgba(26, 20, 24, 0.65);
+    --wine-bubble-text: #EDE8E2;
+    --wine-gold: #C9A96E;
+    --wine-accent: #C9A96E;
+    --wine-gold-warm: #C9A96E;
+    --wine-hover-bg: rgba(201, 169, 110, 0.10);
+    --wine-hover-bg-strong: rgba(201, 169, 110, 0.16);
+    --wine-subtle-bg: rgba(201, 169, 110, 0.06);
+    --wine-subtle-bg-lighter: rgba(201, 169, 110, 0.03);
+    --wine-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    --wine-shadow-md: 0 2px 10px rgba(0, 0, 0, 0.45);
+    --wine-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.5);
+    --wine-shadow-strong: 0 2px 12px rgba(0, 0, 0, 0.6);
+    --wine-shadow-xl: 0 8px 48px rgba(0, 0, 0, 0.6);
+    --wine-shadow-card: 0 2px 16px rgba(0, 0, 0, 0.35);
+    --wine-overlay-bg: rgba(0, 0, 0, 0.65);
+    --wine-overlay-bg-strong: rgba(0, 0, 0, 0.75);
+    --wine-overlay-dark: rgba(0, 0, 0, 0.88);
+    --wine-overlay-btn: rgba(0, 0, 0, 0.65);
+    --wine-action-border: rgba(201, 169, 110, 0.12);
+    --wine-action-bg: linear-gradient(135deg, rgba(139, 58, 92, 0.15), rgba(201, 169, 110, 0.10));
+    --wine-action-border-color: rgba(201, 169, 110, 0.18);
+    --wine-tag-bg: linear-gradient(135deg, rgba(139, 58, 92, 0.12), rgba(201, 169, 110, 0.10));
+    --wine-tag-border: rgba(201, 169, 110, 0.15);
+    --wine-tag-hover-bg: linear-gradient(135deg, rgba(139, 58, 92, 0.22), rgba(201, 169, 110, 0.18));
+    --wine-tag-active-bg: linear-gradient(135deg, rgba(139, 58, 92, 0.32), rgba(201, 169, 110, 0.28));
+    --wine-recommend-bg: rgba(26, 20, 24, 0.7);
+    --wine-recommend-border: rgba(201, 169, 110, 0.25);
+    --wine-quick-btn-bg: rgba(26, 20, 24, 0.6);
+    --wine-empty-radial-1: rgba(139, 58, 92, 0.05);
+    --wine-empty-radial-2: rgba(201, 169, 110, 0.04);
+    --wine-glow-border: rgba(201, 169, 110, 0.45);
+    --wine-glow-shadow: 0 0 24px rgba(201, 169, 110, 0.25), inset 0 0 24px rgba(201, 169, 110, 0.06);
+    --wine-glow-shadow-pulse: 0 0 36px rgba(201, 169, 110, 0.4), inset 0 0 36px rgba(201, 169, 110, 0.12);
+    --wine-skip-color: rgba(255, 255, 255, 0.75);
+    --wine-skip-bg: rgba(255, 255, 255, 0.08);
+    --wine-skip-border: rgba(255, 255, 255, 0.15);
+    --wine-card-overlay-shadow: 0 20px 72px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(201, 169, 110, 0.08);
+    --wine-img-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    --wine-lightbox-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
+    --wine-rating-low: #7A7078;
+    --wine-rating-mid: #C9A96E;
+    --wine-rating-high: #D4A07A;
+    --wine-disabled-bg: rgba(201, 169, 110, 0.04);
+    --wine-disabled-border: rgba(201, 169, 110, 0.08);
+    --wine-cellar-card-border: rgba(201, 169, 110, 0.08);
   }
 }
 
@@ -260,9 +260,11 @@ body {
   animation: messageSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
-/* ═══ Message bubble hover lift ═══ */
+/* ═══ Message bubble hover lift + glassmorphism ═══ */
 .msg-bubble {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .msg-bubble:hover {
@@ -295,10 +297,11 @@ body {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 10%;
-  right: 10%;
+  left: 5%;
+  right: 5%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--wine-accent), var(--wine-gold-warm), var(--wine-accent), transparent);
+  background: linear-gradient(90deg, transparent 0%, var(--wine-accent) 20%, var(--wine-gold-warm) 50%, var(--wine-accent) 80%, transparent 100%);
+  opacity: 0.6;
 }
 
 /* ═══ Welcome area animations ═══ */
@@ -442,13 +445,15 @@ body {
 .input-container {
   transition: all 0.3s ease;
   border: 1px solid var(--wine-light);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .input-container:focus-within {
-  border-color: var(--wine-deep);
+  border-color: var(--wine-gold);
   box-shadow:
     0 0 0 3px var(--wine-hover-bg),
-    0 0 20px var(--wine-subtle-bg);
+    0 0 24px var(--wine-subtle-bg);
 }
 
 /* ═══ Wine glass swirl loading animation ═══ */
@@ -1148,6 +1153,8 @@ body {
   overflow: hidden;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .scenario-card::before {
@@ -1163,11 +1170,11 @@ body {
 .scenario-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--wine-shadow-lg);
-  border-color: var(--wine-deep) !important;
+  border-color: var(--wine-gold) !important;
 }
 
 .scenario-card:hover::before {
-  opacity: 1;
+  opacity: 0.85;
 }
 
 .scenario-card:hover span {
