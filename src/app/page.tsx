@@ -839,14 +839,42 @@ export default function Home() {
       {/* Header */}
       <header className="header-animate header-decorated flex items-center justify-between py-5 px-4">
         <div className="w-10" />
-        <div className="text-center">
+        <button
+          onClick={() => {
+            if (messages.length > 0) confirmClear();
+          }}
+          className="text-center group"
+          style={{
+            cursor: messages.length > 0 ? "pointer" : "default",
+            background: "none",
+            border: "none",
+            padding: 0,
+          }}
+          title={messages.length > 0 ? "回到主页" : undefined}
+        >
           <h1
-            className="text-2xl font-semibold tracking-wide"
+            className="text-2xl font-semibold tracking-wide flex items-center justify-center gap-1.5 transition-opacity group-hover:opacity-80"
             style={{
               fontFamily: "'Cormorant Garamond', 'Noto Serif SC', serif",
               color: "var(--wine-deep)",
             }}
           >
+            {messages.length > 0 && (
+              <svg
+                className="w-5 h-5 flex-shrink-0 transition-transform group-hover:-translate-x-0.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.8}
+                viewBox="0 0 24 24"
+                style={{ color: "var(--wine-deep)" }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+                />
+              </svg>
+            )}
             <span style={{ color: "var(--wine-gold-warm)" }}>✦</span>
             {" "}瑞莫品酒顾问{" "}
             <span style={{ color: "var(--wine-gold-warm)" }}>✦</span>
@@ -861,7 +889,7 @@ export default function Home() {
           >
             Raymo Wine Advisor · AI驱动的专业品酒体验
           </p>
-        </div>
+        </button>
         {messages.length > 0 ? (
           <button
             onClick={confirmClear}
