@@ -125,6 +125,12 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    if (messages.length === 0) {
+      return new Response(JSON.stringify({ error: "No messages provided" }), {
+        status: 400,
+      });
+    }
+
     // Convert to Gemini format with multimodal support
     const geminiContents = messages.map((msg: ChatMessage) => {
       const parts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [];
