@@ -1376,25 +1376,94 @@ export default function Home() {
       {/* Messages Area */}
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-4 py-6 space-y-5">
         {showEmptyState && (
-          <div className={`flex flex-col items-center justify-center h-full text-center space-y-6 empty-state-bg ${transitioning ? "fade-out-up" : "welcome-animate"}`}>
+          <div className={`flex flex-col items-center min-h-full empty-state-bg py-4 ${transitioning ? "fade-out-up" : "welcome-animate"}`}>
             <WineBottleSVG className="wine-bottle-decor" style={{ width: 30, height: 90, top: "8%", left: "8%", color: "var(--wine-deep)", opacity: 0.04, position: "absolute", transform: "rotate(-12deg)" }} />
             <WineBottleSVG className="wine-bottle-decor" style={{ width: 25, height: 75, top: "12%", right: "10%", color: "var(--wine-accent)", opacity: 0.04, position: "absolute", transform: "rotate(8deg)" }} />
-            <GrapeVineSVG style={{ width: 200, position: "absolute", top: "2%", left: "50%", transform: "translateX(-50%)", color: "var(--wine-accent)", opacity: 0.35 }} />
-            <div className="wine-icon-float text-6xl" style={{ marginTop: 20 }}>🍷</div>
-            <div className="wine-decoration">
-              <h2 className="text-xl font-medium mb-2" style={{ fontFamily: "'Cormorant Garamond', 'Noto Serif SC', serif", color: "var(--wine-deep)" }}>欢迎来到瑞莫品酒顾问</h2>
-              <p className="text-sm max-w-sm" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)", opacity: 0.8 }}>您的AI品酒顾问，提供葡萄酒推荐、品鉴笔记与餐酒搭配建议</p>
+
+            {/* Brand Header */}
+            <div className="wine-icon-float text-5xl mt-6 mb-3">🍷</div>
+            <div className="wine-decoration text-center mb-1">
+              <h2 className="text-lg font-medium" style={{ fontFamily: "'Cormorant Garamond', 'Noto Serif SC', serif", color: "var(--wine-deep)" }}>您的AI侍酒师，随时待命</h2>
             </div>
-            <div className="grid grid-cols-2 gap-3 max-w-md w-full px-2">
-              {["推荐一款适合初学者的红酒", "牛排配什么酒最好？", "介绍一下波尔多产区", "帮我品鉴拉菲2015"].map((suggestion, idx) => (
-                <button key={suggestion} onClick={() => sendMessage(suggestion)} className={`quick-btn quick-btn-animate stagger-${idx + 1} text-left text-sm px-4 py-3 rounded-xl border`} style={{ borderColor: "var(--wine-light)", color: "var(--wine-deep)", fontFamily: "'Noto Serif SC', serif" }}>
-                  <span className="quick-btn-content flex items-center gap-2">
-                    <span className="text-base">{QUICK_ICONS[suggestion] || "🍷"}</span>
-                    <span>{suggestion}</span>
-                  </span>
+
+            {/* Scenario Cards */}
+            <div className="w-full max-w-md px-4 mt-5 space-y-3">
+              <p className="text-xs text-center mb-3" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)", opacity: 0.7 }}>您现在的场景是？</p>
+
+              <div className="grid grid-cols-2 gap-3">
+                {/* 在餐厅 */}
+                <button
+                  onClick={() => sendMessage("我现在在餐厅，想找一款合适的酒搭配今天的菜，请问你需要了解什么信息来帮我推荐？")}
+                  className="scenario-card quick-btn-animate stagger-1 flex flex-col items-start p-4 rounded-2xl border text-left transition-all"
+                  style={{ borderColor: "var(--wine-light)", background: "rgba(255,255,255,0.7)", backdropFilter: "blur(8px)" }}
+                >
+                  <span className="text-2xl mb-2">🍽️</span>
+                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>在餐厅</span>
+                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>找搭配，快速推荐</span>
                 </button>
-              ))}
+
+                {/* 选购葡萄酒 */}
+                <button
+                  onClick={() => sendMessage("我想选购一瓶葡萄酒，能帮我推荐吗？请先问我一些问题来了解我的需求。")}
+                  className="scenario-card quick-btn-animate stagger-2 flex flex-col items-start p-4 rounded-2xl border text-left transition-all"
+                  style={{ borderColor: "var(--wine-light)", background: "rgba(255,255,255,0.7)", backdropFilter: "blur(8px)" }}
+                >
+                  <span className="text-2xl mb-2">🛒</span>
+                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>选购葡萄酒</span>
+                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>按场景、口味、预算选酒</span>
+                </button>
+
+                {/* 认识一瓶酒 */}
+                <button
+                  onClick={() => {
+                    setShowActionSheet(true);
+                  }}
+                  className="scenario-card quick-btn-animate stagger-3 flex flex-col items-start p-4 rounded-2xl border text-left transition-all"
+                  style={{ borderColor: "var(--wine-light)", background: "rgba(255,255,255,0.7)", backdropFilter: "blur(8px)" }}
+                >
+                  <span className="text-2xl mb-2">📸</span>
+                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>认识一瓶酒</span>
+                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>拍照识酒，了解详情</span>
+                </button>
+
+                {/* 品酒记录 */}
+                <button
+                  onClick={() => sendMessage("我正在品酒，想让你引导我做一次专业的品鉴体验。请一步一步带我从外观、香气、口感到余味来品评。")}
+                  className="scenario-card quick-btn-animate stagger-4 flex flex-col items-start p-4 rounded-2xl border text-left transition-all"
+                  style={{ borderColor: "var(--wine-light)", background: "rgba(255,255,255,0.7)", backdropFilter: "blur(8px)" }}
+                >
+                  <span className="text-2xl mb-2">🍷</span>
+                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>品酒记录</span>
+                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>AI引导品鉴，边喝边记</span>
+                </button>
+              </div>
+
+              {/* Divider */}
+              <div className="wine-divider mt-4">
+                <span className="text-xs px-3 whitespace-nowrap" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)", opacity: 0.6 }}>或直接提问</span>
+              </div>
+
+              {/* Quick questions */}
+              <div className="flex flex-wrap gap-2 justify-center">
+                {["推荐入门红酒", "牛排配什么酒", "波尔多产区介绍", "今天喝什么"].map((q, idx) => (
+                  <button
+                    key={q}
+                    onClick={() => sendMessage(q)}
+                    className="quick-chip px-3 py-1.5 rounded-full text-xs transition-all"
+                    style={{
+                      fontFamily: "'Noto Serif SC', serif",
+                      color: "var(--wine-deep)",
+                      border: "1px solid var(--wine-light)",
+                      background: "rgba(255,255,255,0.5)",
+                      animationDelay: `${0.3 + idx * 0.05}s`,
+                    }}
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
             </div>
+
             {hydrated && <TasteProfileSection profile={tasteProfile} onSendMessage={sendMessage} />}
           </div>
         )}

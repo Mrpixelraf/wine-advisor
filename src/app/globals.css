@@ -956,6 +956,61 @@ body {
   overflow: hidden;
 }
 
+/* ═══ Scenario Cards ═══ */
+.scenario-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scenario-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--wine-deep), var(--wine-medium));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.scenario-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(114, 47, 55, 0.15);
+  border-color: var(--wine-deep) !important;
+}
+
+.scenario-card:hover::before {
+  opacity: 1;
+}
+
+.scenario-card:hover span {
+  color: white !important;
+  position: relative;
+  z-index: 1;
+}
+
+.scenario-card:active {
+  transform: scale(0.96) !important;
+}
+
+/* Quick chips (small pill buttons) */
+.quick-chip {
+  transition: all 0.2s ease;
+  animation: quickBtnEnter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.quick-chip:hover {
+  background: var(--wine-deep) !important;
+  color: white !important;
+  border-color: var(--wine-deep) !important;
+  transform: scale(1.05);
+}
+
+.quick-chip:active {
+  transform: scale(0.93) !important;
+}
+
 /* ═══ Route Choice Card (smart routing buttons in AI message) ═══ */
 .route-choice-card {
   animation: messageSlideIn 0.3s ease-out;
