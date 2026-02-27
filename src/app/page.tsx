@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 /* ─── Types ─── */
 interface Message {
@@ -332,10 +333,51 @@ function ScrollToBottomButton({ onClick }: { onClick: () => void }) {
   );
 }
 
+/**
+ * Sanitize streaming markdown: close unclosed inline markers so
+ * ReactMarkdown doesn't choke on partial tokens mid-stream.
+ */
+function sanitizeStreamingMarkdown(text: string): string {
+  // Handle unclosed code blocks (``` ... )
+  const codeBlockCount = (text.match(/```/g) || []).length;
+  if (codeBlockCount % 2 !== 0) {
+    text += "\n```";
+  }
+
+  // Handle unclosed inline code (`)
+  const inlineCodeCount = (text.match(/(?<!`)`(?!`)/g) || []).length;
+  if (inlineCodeCount % 2 !== 0) {
+    text += "`";
+  }
+
+  // Handle unclosed bold (**)
+  const boldCount = (text.match(/\*\*/g) || []).length;
+  if (boldCount % 2 !== 0) {
+    text += "**";
+  }
+
+  // Handle unclosed italic (*) — count single asterisks not part of **
+  const singleStarCount = (text.match(/(?<!\*)\*(?!\*)/g) || []).length;
+  if (singleStarCount % 2 !== 0) {
+    text += "*";
+  }
+
+  // Handle unclosed strikethrough (~~)
+  const strikeCount = (text.match(/~~/g) || []).length;
+  if (strikeCount % 2 !== 0) {
+    text += "~~";
+  }
+
+  return text;
+}
+
 /** Markdown renderer */
-function MarkdownContent({ content }: { content: string }) {
+function MarkdownContent({ content, isStreaming = false }: { content: string; isStreaming?: boolean }) {
+  const processedContent = isStreaming ? sanitizeStreamingMarkdown(content) : content;
+
   return (
     <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
       components={{
         h1: ({ children }) => (
           <h1 className="text-lg font-bold mb-2 mt-3" style={{ color: "var(--wine-deep)" }}>
@@ -382,9 +424,61 @@ function MarkdownContent({ content }: { content: string }) {
             {children}
           </code>
         ),
+        table: ({ children }) => (
+          <div className="overflow-x-auto my-3 rounded-lg" style={{ border: "1px solid var(--wine-light)" }}>
+            <table className="w-full text-sm border-collapse" style={{ fontFamily: "'Noto Serif SC', serif" }}>
+              {children}
+            </table>
+          </div>
+        ),
+        thead: ({ children }) => (
+          <thead
+            style={{
+              backgroundColor: "var(--wine-deep)",
+              color: "white",
+            }}
+          >
+            {children}
+          </thead>
+        ),
+        tbody: ({ children }) => <tbody>{children}</tbody>,
+        tr: ({ children, ...props }) => {
+          // Use node index to determine even/odd for alternating row colors
+          const node = (props as Record<string, unknown>).node as { position?: { start?: { line?: number } } } | undefined;
+          const lineNum = node?.position?.start?.line ?? 0;
+          const isEven = lineNum % 2 === 0;
+          return (
+            <tr
+              style={{
+                backgroundColor: isEven ? "rgba(114, 47, 55, 0.04)" : "transparent",
+                borderBottom: "1px solid var(--wine-light)",
+              }}
+            >
+              {children}
+            </tr>
+          );
+        },
+        th: ({ children }) => (
+          <th
+            className="px-3 py-2 text-left text-xs font-semibold tracking-wide"
+            style={{
+              borderBottom: "2px solid var(--wine-gold-warm, #C4956A)",
+            }}
+          >
+            {children}
+          </th>
+        ),
+        td: ({ children }) => (
+          <td
+            className="px-3 py-2 text-xs"
+            style={{ color: "var(--wine-text)" }}
+          >
+            {children}
+          </td>
+        ),
       }}
     >
-      {content}
+      {processedContent}
     </ReactMarkdown>
   );
 }
@@ -985,7 +1079,7 @@ export default function Home() {
                 boxShadow: "0 1px 4px rgba(114, 47, 55, 0.06)",
               }}
             >
-              <MarkdownContent content={streamingContent} />
+              <MarkdownContent content={streamingContent} isStreaming={true} />
             </div>
           </div>
         )}
