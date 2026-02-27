@@ -8,17 +8,25 @@
   --wine-gold: #C4A35A;
   --wine-dark: #1A0A0E;
   --wine-text: #2D1B20;
+  --wine-accent: #D4A574;
+  --wine-gold-warm: #C9A96E;
+  /* iOS safe area */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
 body {
   background: var(--wine-cream);
   color: var(--wine-text);
   font-family: 'Georgia', 'Times New Roman', serif;
+  -webkit-text-size-adjust: 100%;
 }
 
-/* Custom scrollbar */
+/* ═══ Custom scrollbar — thin, wine-themed ═══ */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -26,11 +34,21 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--wine-light);
-  border-radius: 3px;
+  background: linear-gradient(180deg, var(--wine-deep), var(--wine-medium));
+  border-radius: 2px;
 }
 
-/* Streaming text animation */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--wine-deep);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--wine-deep) transparent;
+}
+
+/* ═══ Streaming text cursor blink ═══ */
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
@@ -38,16 +56,557 @@ body {
 
 .cursor-blink::after {
   content: '▋';
-  animation: blink 1s infinite;
+  animation: blink 0.8s step-end infinite;
   color: var(--wine-deep);
+  font-size: 0.85em;
+  margin-left: 1px;
+  vertical-align: baseline;
 }
 
-/* Message fade in */
-@keyframes fadeIn {
+/* ═══ Message slide-up + fade-in ═══ */
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-enter {
+  animation: messageSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* ═══ Message bubble hover lift ═══ */
+.msg-bubble {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.msg-bubble:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(114, 47, 55, 0.1);
+}
+
+/* ═══ Header animations ═══ */
+@keyframes headerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-animate {
+  animation: headerFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* Header bottom decorative gradient */
+.header-decorated {
+  position: relative;
+}
+
+.header-decorated::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--wine-accent), var(--wine-gold-warm), var(--wine-accent), transparent);
+}
+
+/* ═══ Welcome area animations ═══ */
+@keyframes welcomeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.welcome-animate {
+  animation: welcomeFadeIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s both;
+}
+
+/* ═══ Empty state → Chat state transitions ═══ */
+@keyframes fadeOutSlideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.fade-out-up {
+  animation: fadeOutSlideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes fadeInFromBelow {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInFromBelow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s both;
+}
+
+/* ═══ Quick button refined styles ═══ */
+.quick-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.quick-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--wine-deep), var(--wine-medium));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.quick-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px rgba(114, 47, 55, 0.15);
+  border-color: var(--wine-deep) !important;
+}
+
+.quick-btn:hover::before {
+  opacity: 1;
+}
+
+.quick-btn:hover .quick-btn-content {
+  color: white !important;
+  position: relative;
+  z-index: 1;
+}
+
+.quick-btn:active {
+  transform: scale(0.95) !important;
+}
+
+.quick-btn .quick-btn-content {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+/* ═══ AI avatar breathing/pulse animation ═══ */
+@keyframes breathe {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(114, 47, 55, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(114, 47, 55, 0);
+    transform: scale(1.05);
+  }
+}
+
+.ai-avatar-pulse {
+  animation: breathe 2s ease-in-out infinite;
+}
+
+/* ═══ Send button micro-interactions ═══ */
+@keyframes sendFly {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.85) translateX(2px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.send-btn {
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.send-btn:active:not(:disabled) {
+  transform: scale(0.85) !important;
+}
+
+.send-btn-fly {
+  animation: sendFly 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ═══ Input focus glow ═══ */
+.input-container {
+  transition: all 0.3s ease;
+  border: 1px solid var(--wine-light);
+}
+
+.input-container:focus-within {
+  border-color: var(--wine-deep);
+  box-shadow:
+    0 0 0 3px rgba(114, 47, 55, 0.08),
+    0 0 20px rgba(212, 165, 116, 0.12);
+}
+
+/* ═══ Wine glass swirl loading animation ═══ */
+@keyframes swirl {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(12deg); }
+  30% { transform: rotate(-10deg); }
+  45% { transform: rotate(8deg); }
+  60% { transform: rotate(-6deg); }
+  75% { transform: rotate(4deg); }
+  90% { transform: rotate(-2deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes wineWave {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  25% { transform: translateY(-2px) scaleY(0.95); }
+  50% { transform: translateY(1px) scaleY(1.02); }
+  75% { transform: translateY(-1px) scaleY(0.98); }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.wine-glass-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  animation: swirl 2s ease-in-out infinite;
+}
+
+.wine-glass-loader .glass-bowl {
+  width: 28px;
+  height: 18px;
+  border: 2px solid var(--wine-deep);
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.wine-glass-loader .wine-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(135deg, var(--wine-deep), var(--wine-medium));
+  border-radius: 0 0 12px 12px;
+  animation: wineWave 2s ease-in-out infinite;
+}
+
+.wine-glass-loader .glass-stem {
+  width: 2px;
+  height: 10px;
+  background: var(--wine-deep);
+}
+
+.wine-glass-loader .glass-base {
+  width: 16px;
+  height: 2px;
+  background: var(--wine-deep);
+  border-radius: 1px;
+}
+
+.wine-glass-loader .shimmer-text {
+  font-size: 11px;
+  color: var(--wine-medium);
+  font-family: 'Noto Serif SC', serif;
+  margin-top: 4px;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* ═══ Scroll to bottom button ═══ */
+@keyframes fadeInUp {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.message-enter {
-  animation: fadeIn 0.3s ease-out;
+.scroll-to-bottom-btn {
+  animation: fadeInUp 0.25s ease-out;
+}
+
+/* ═══ Decorative elements — vine/wine motifs ═══ */
+.wine-decoration {
+  position: relative;
+}
+
+.wine-decoration::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 60px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 60' fill='none'%3E%3Cpath d='M20 40 C30 10, 50 10, 60 30 C70 10, 90 10, 100 40' stroke='%23D4A574' stroke-width='1' opacity='0.3' fill='none'/%3E%3Ccircle cx='35' cy='20' r='3' fill='%23D4A574' opacity='0.15'/%3E%3Ccircle cx='85' cy='20' r='3' fill='%23D4A574' opacity='0.15'/%3E%3Ccircle cx='60' cy='35' r='4' fill='%23D4A574' opacity='0.1'/%3E%3C/svg%3E") no-repeat center;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Empty state decorative background */
+.empty-state-bg {
+  position: relative;
+}
+
+.empty-state-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 50%, rgba(114, 47, 55, 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 400px at 80% 50%, rgba(212, 165, 116, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Wine bottle silhouette decorative element */
+.wine-bottle-decor {
+  position: absolute;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+/* ═══ Taste profile tag styles ═══ */
+@keyframes tagFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.taste-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: 'Noto Serif SC', serif;
+  background: linear-gradient(135deg, rgba(114, 47, 55, 0.08), rgba(212, 165, 116, 0.12));
+  color: var(--wine-deep);
+  border: 1px solid rgba(114, 47, 55, 0.12);
+  transition: all 0.25s ease;
+  animation: tagFadeIn 0.3s ease both;
+}
+
+.taste-tag:hover {
+  background: linear-gradient(135deg, rgba(114, 47, 55, 0.15), rgba(212, 165, 116, 0.2));
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(114, 47, 55, 0.1);
+}
+
+/* Taste section recommend button */
+.taste-recommend-btn {
+  position: relative;
+  overflow: hidden;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-family: 'Noto Serif SC', serif;
+  color: var(--wine-deep);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.taste-recommend-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--wine-accent), var(--wine-gold-warm));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.taste-recommend-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 16px rgba(201, 169, 110, 0.2);
+  border-color: var(--wine-gold-warm);
+}
+
+.taste-recommend-btn:hover::before {
+  opacity: 1;
+}
+
+.taste-recommend-btn:hover .taste-recommend-text {
+  color: white;
+}
+
+.taste-recommend-btn:active {
+  transform: scale(0.96);
+}
+
+.taste-recommend-text {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+/* ═══ Taste profile section ═══ */
+.taste-section {
+  animation: welcomeFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+}
+
+/* ═══ Footer decorative line ═══ */
+.footer-decorated {
+  position: relative;
+}
+
+.footer-decorated::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--wine-accent) 30%, var(--wine-gold-warm) 50%, var(--wine-accent) 70%, transparent);
+}
+
+/* ═══ Decorative divider ═══ */
+.wine-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.wine-divider::before,
+.wine-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--wine-accent), transparent);
+}
+
+/* ═══ Touch feedback for mobile ═══ */
+@media (hover: none) and (pointer: coarse) {
+  button:active {
+    opacity: 0.7;
+    transform: scale(0.97);
+    transition: transform 0.1s, opacity 0.1s;
+  }
+
+  .msg-bubble:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* ═══ Mobile font size adjustments ═══ */
+@media (max-width: 640px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+/* ═══ Confirm dialog overlay ═══ */
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialogSlideUp {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.confirm-overlay {
+  animation: overlayFadeIn 0.2s ease-out;
+}
+
+.confirm-dialog {
+  animation: dialogSlideUp 0.2s ease-out;
+}
+
+/* ═══ Error message retry button ═══ */
+.retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  border: 1px solid var(--wine-light);
+  color: var(--wine-deep);
+  background: var(--wine-cream);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.retry-btn:hover {
+  background: var(--wine-deep);
+  color: white;
+  border-color: var(--wine-deep);
+}
+
+/* ═══ Empty state large wine icon animation ═══ */
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.wine-icon-float {
+  animation: gentleFloat 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* ═══ Stagger animations for quick buttons ═══ */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+
+@keyframes quickBtnEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.quick-btn-animate {
+  animation: quickBtnEnter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
