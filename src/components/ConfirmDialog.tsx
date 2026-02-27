@@ -18,7 +18,7 @@ export default function ConfirmDialog({
   return (
     <div
       className="confirm-overlay fixed inset-0 z-50"
-      style={{ backgroundColor: "rgba(26,10,14,0.4)" }}
+      style={{ backgroundColor: "var(--wine-overlay-bg)" }}
       onClick={onCancel}
     >
       <div

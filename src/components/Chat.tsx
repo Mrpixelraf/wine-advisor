@@ -83,7 +83,7 @@ export default function Chat({
                 backgroundColor: "var(--wine-card, #FFFFFF)",
                 borderColor: "var(--wine-border)",
                 color: "var(--wine-bubble-text)",
-                boxShadow: "0 1px 4px rgba(30, 26, 43, 0.06)",
+                boxShadow: "var(--wine-shadow)",
               }}
             >
               <MarkdownContent content={streamingContent} isStreaming={true} />
@@ -105,7 +105,7 @@ export default function Chat({
               style={{
                 backgroundColor: "var(--wine-card, #FFFFFF)",
                 borderColor: "var(--wine-border)",
-                boxShadow: "0 1px 4px rgba(139, 34, 82, 0.06)",
+                boxShadow: "var(--wine-shadow)",
               }}
             >
               <WineGlassLoader locale={locale} />

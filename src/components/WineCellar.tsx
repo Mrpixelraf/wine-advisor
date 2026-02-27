@@ -26,9 +26,9 @@ function WineDetailView({
   };
 
   const getRatingColor = (val: number) => {
-    if (val < 40) return "#999";
-    if (val < 70) return "#C9A96E";
-    return "#8B2252";
+    if (val < 40) return "var(--wine-rating-low)";
+    if (val < 70) return "var(--wine-rating-mid)";
+    return "var(--wine-rating-high)";
   };
 
   const hasTags = wine.tags && Object.values(wine.tags).some((arr) => arr && arr.length > 0);
@@ -42,7 +42,7 @@ function WineDetailView({
       <div className="flex items-center justify-between px-4 pt-4 pb-3" style={{ paddingTop: "calc(16px + var(--safe-top))" }}>
         <button
           onClick={handleClose}
-          className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-[rgba(114,47,55,0.08)] active:scale-95"
+          className="w-10 h-10 rounded-full flex items-center justify-center transition-all wine-hover-bg active:scale-95"
           style={{ color: "var(--wine-deep)" }}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
@@ -50,7 +50,7 @@ function WineDetailView({
           </svg>
         </button>
         <h2 className="text-base font-semibold" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>
-          {locale === "en" ? "Wine Details" : "酒款详情"}
+          {t(locale, "wineDetailTitle")}
         </h2>
         <div className="w-10" />
       </div>
@@ -64,11 +64,11 @@ function WineDetailView({
               src={wine.image}
               alt={wine.name}
               className="rounded-2xl object-cover"
-              style={{ width: "100%", maxHeight: 280, objectFit: "cover", border: "1px solid var(--wine-border)", boxShadow: "0 4px 20px rgba(139, 34, 82, 0.12)" }}
+              style={{ width: "100%", maxHeight: 280, objectFit: "cover", border: "1px solid var(--wine-border)", boxShadow: "var(--wine-shadow-md)" }}
             />
           </div>
         ) : (
-          <div className="flex justify-center items-center mb-5 rounded-2xl" style={{ height: 160, backgroundColor: "rgba(114,47,55,0.04)", border: "1px solid var(--wine-border)" }}>
+          <div className="flex justify-center items-center mb-5 rounded-2xl" style={{ height: 160, backgroundColor: "var(--wine-subtle-bg-lighter)", border: "1px solid var(--wine-border)" }}>
             <span className="text-6xl opacity-20">🍷</span>
           </div>
         )}
@@ -90,21 +90,21 @@ function WineDetailView({
 
         {/* Meta info */}
         <div className="flex flex-wrap gap-2 mb-5">
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "rgba(114,47,55,0.06)", color: "var(--wine-accent)" }}>
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "var(--wine-subtle-bg)", color: "var(--wine-accent)" }}>
             📅 {wine.date}
           </span>
           {wine.region && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "rgba(114,47,55,0.06)", color: "var(--wine-accent)" }}>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "var(--wine-subtle-bg)", color: "var(--wine-accent)" }}>
               📍 {wine.region}
             </span>
           )}
           {wine.grape && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "rgba(114,47,55,0.06)", color: "var(--wine-accent)" }}>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "var(--wine-subtle-bg)", color: "var(--wine-accent)" }}>
               🍇 {wine.grape}
             </span>
           )}
           {wine.price && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "rgba(114,47,55,0.06)", color: "var(--wine-accent)" }}>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "var(--wine-subtle-bg)", color: "var(--wine-accent)" }}>
               💰 {wine.price}
             </span>
           )}
@@ -115,7 +115,7 @@ function WineDetailView({
           <div className="mb-5">
             <div className="wine-divider mb-3">
               <span className="text-xs px-3 whitespace-nowrap" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>
-                {locale === "en" ? "Tasting Notes" : "品鉴标签"}
+                {t(locale, "tastingNotesLabel")}
               </span>
             </div>
             {TASTING_TAG_CATEGORIES.map((category) => {
@@ -149,7 +149,7 @@ function WineDetailView({
           <div className="mb-5">
             <div className="wine-divider mb-3">
               <span className="text-xs px-3 whitespace-nowrap" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>
-                {locale === "en" ? "My Notes" : "我的笔记"}
+                {t(locale, "myNotesLabel")}
               </span>
             </div>
             <div className="p-4 rounded-2xl text-sm leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "var(--wine-card, #FFFFFF)", color: "var(--wine-text)", border: "1px solid var(--wine-border)", whiteSpace: "pre-wrap" }}>
@@ -163,7 +163,7 @@ function WineDetailView({
           <div className="mb-5">
             <div className="wine-divider mb-3">
               <span className="text-xs px-3 whitespace-nowrap" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>
-                {locale === "en" ? "AI Tasting Notes" : "AI品鉴笔记"}
+                {t(locale, "aiTastingNotesLabel")}
               </span>
             </div>
             <div className="p-4 rounded-2xl text-sm leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "var(--wine-card, #FFFFFF)", color: "var(--wine-bubble-text)", border: "1px solid var(--wine-border)" }}>
@@ -206,7 +206,7 @@ export default function CellarPage({
         <h2 className="text-lg font-semibold" style={{ fontFamily: "'Cormorant Garamond', 'Noto Serif SC', serif", color: "var(--wine-deep)" }}>
           <span style={{ color: "var(--wine-gold-warm)" }}>✦</span> {t(locale, "cellarTitle")} <span style={{ color: "var(--wine-gold-warm)" }}>✦</span>
         </h2>
-        <button onClick={onClose} className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-[rgba(114,47,55,0.08)] active:scale-95" style={{ color: "var(--wine-deep)" }}>
+        <button onClick={onClose} className="w-10 h-10 rounded-full flex items-center justify-center transition-all wine-hover-bg active:scale-95" style={{ color: "var(--wine-deep)" }}>
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -214,14 +214,14 @@ export default function CellarPage({
       </div>
 
       {/* Tabs */}
-      <div className="cellar-tabs flex relative mx-4 mb-4 rounded-xl overflow-hidden" style={{ backgroundColor: "rgba(114,47,55,0.06)" }}>
+      <div className="cellar-tabs flex relative mx-4 mb-4 rounded-xl overflow-hidden" style={{ backgroundColor: "var(--wine-subtle-bg)" }}>
         <div
           className="cellar-tab-indicator absolute top-1 bottom-1 rounded-lg transition-all duration-300"
           style={{
             width: "calc(50% - 4px)",
             left: activeTab === "drinking" ? "4px" : "calc(50% + 0px)",
             backgroundColor: "var(--wine-card, #FFFFFF)",
-            boxShadow: "0 1px 4px rgba(114,47,55,0.12)",
+            boxShadow: "var(--wine-shadow)",
           }}
         />
         <button
@@ -258,20 +258,20 @@ export default function CellarPage({
               <div
                 key={wine.id}
                 className="cellar-card flex gap-3 p-3 rounded-2xl transition-all cursor-pointer active:scale-[0.98]"
-                style={{ backgroundColor: "var(--wine-card, #FFFFFF)", boxShadow: "0 2px 12px rgba(139, 34, 82, 0.06)", border: "1px solid rgba(114,47,55,0.06)" }}
+                style={{ backgroundColor: "var(--wine-card, #FFFFFF)", boxShadow: "var(--wine-shadow-card)", border: "1px solid var(--wine-cellar-card-border)" }}
                 onClick={() => setSelectedWine(wine)}
                 onContextMenu={(e) => { e.preventDefault(); setDeleteConfirmId(wine.id); }}
               >
                 {wine.image ? (
                   <img src={wine.image} alt={wine.name} className="w-16 h-16 rounded-xl object-cover flex-shrink-0" style={{ border: "1px solid var(--wine-border)" }} />
                 ) : (
-                  <div className="w-16 h-16 rounded-xl flex-shrink-0 flex items-center justify-center text-2xl" style={{ backgroundColor: "rgba(114,47,55,0.06)" }}>🍷</div>
+                  <div className="w-16 h-16 rounded-xl flex-shrink-0 flex items-center justify-center text-2xl" style={{ backgroundColor: "var(--wine-subtle-bg)" }}>🍷</div>
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <h4 className="text-sm font-semibold truncate" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>{wine.name}</h4>
                     {wine.rating && (
-                      <span className="cellar-rating-badge flex-shrink-0 px-2 py-0.5 rounded-full text-xs font-bold text-white" style={{ backgroundColor: wine.rating >= 70 ? "var(--wine-deep)" : wine.rating >= 40 ? "var(--wine-gold-warm)" : "#999" }}>
+                      <span className="cellar-rating-badge flex-shrink-0 px-2 py-0.5 rounded-full text-xs font-bold text-white" style={{ backgroundColor: wine.rating >= 70 ? "var(--wine-deep)" : wine.rating >= 40 ? "var(--wine-gold-warm)" : "var(--wine-rating-low)" }}>
                         {wine.rating}
                       </span>
                     )}

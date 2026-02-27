@@ -131,8 +131,15 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Limit conversation history to last 20 messages to avoid token overflow
+    // Keep the most recent context while staying within Gemini's limits
+    const MAX_HISTORY = 20;
+    const trimmedMessages = messages.length > MAX_HISTORY
+      ? messages.slice(-MAX_HISTORY)
+      : messages;
+
     // Convert to Gemini format with multimodal support
-    const geminiContents = messages.map((msg: ChatMessage) => {
+    const geminiContents = trimmedMessages.map((msg: ChatMessage) => {
       const parts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [];
 
       if (msg.content) {

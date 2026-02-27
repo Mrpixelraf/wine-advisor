@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, lazy, Suspense } from "react";
 import { type Locale, loadLocale, saveLocale, t } from "@/lib/i18n";
 import type { Message, MessageAction, WineEntry, TasteProfile, WineTags, SceneType } from "@/lib/types";
 import { STORAGE_KEY, ONBOARDING_KEY } from "@/lib/types";
@@ -11,12 +11,14 @@ import { detectWineActions, detectBuyModeActions, detectDrinkModeActions, extrac
 import SceneSelector from "@/components/SceneSelector";
 import Chat from "@/components/Chat";
 import ChatInput, { type PendingImage } from "@/components/ChatInput";
-import CellarPage from "@/components/WineCellar";
-import RatingModal from "@/components/RatingModal";
-import OnboardingTour from "@/components/OnboardingTour";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import Toast from "@/components/Toast";
-import { ImageLightbox } from "@/components/ImageWidgets";
+
+/* ─── Lazy-loaded components (not needed on initial render) ─── */
+const CellarPage = lazy(() => import("@/components/WineCellar"));
+const RatingModal = lazy(() => import("@/components/RatingModal"));
+const OnboardingTour = lazy(() => import("@/components/OnboardingTour"));
+const ImageLightbox = lazy(() => import("@/components/ImageWidgets").then(m => ({ default: m.ImageLightbox })));
 
 /* ─── Compress image to small thumbnail for cellar storage ─── */
 function compressToThumbnail(base64: string): Promise<string> {
@@ -38,6 +40,37 @@ function compressToThumbnail(base64: string): Promise<string> {
     img.onerror = () => resolve("");
     img.src = base64;
   });
+}
+
+/* ─── Retry fetch with exponential backoff ─── */
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit,
+  maxRetries = 2,
+  baseDelay = 1000
+): Promise<Response> {
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, options);
+      // Only retry on 503 (service unavailable) or 429 (rate limit)
+      if (response.ok || (response.status !== 503 && response.status !== 429)) {
+        return response;
+      }
+      if (attempt < maxRetries) {
+        await new Promise((r) => setTimeout(r, baseDelay * Math.pow(2, attempt)));
+        continue;
+      }
+      return response;
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < maxRetries) {
+        await new Promise((r) => setTimeout(r, baseDelay * Math.pow(2, attempt)));
+        continue;
+      }
+    }
+  }
+  throw lastError || new Error("Fetch failed");
 }
 
 /* ═══════════════════════════════════════════
@@ -67,6 +100,7 @@ export default function Home() {
   // v0.6: scene state
   const [activeScene, setActiveScene] = useState<SceneType>(null);
   const [actionSheetOpen, setActionSheetOpen] = useState(false);
+  const [browsingHome, setBrowsingHome] = useState(false);
 
   /* ── Refs ── */
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -155,14 +189,17 @@ export default function Home() {
     try {
       const apiMessages = [{ role: "user" as const, content: hiddenPrompt }];
 
-      const response = await fetch("/api/chat", {
+      const response = await fetchWithRetry("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: apiMessages, locale }),
       });
 
       if (!response.ok) {
-        const statusText = response.status === 429 ? t(locale, "errorRate") : t(locale, "errorRequestFailed");
+        const statusText =
+          response.status === 429 ? t(locale, "errorRate")
+          : response.status === 503 ? t(locale, "errorService")
+          : t(locale, "errorRequestFailed");
         setMessages([{ role: "assistant", content: `⚠️ ${statusText}`, isError: true }]);
         setIsLoading(false);
         return;
@@ -210,6 +247,7 @@ export default function Home() {
   const sendMessage = async (text: string, image?: PendingImage) => {
     const hasImage = !!image;
     if ((!text && !hasImage) || isLoading) return;
+    setBrowsingHome(false);
 
     if (messages.length === 0) {
       setTransitioning(true);
@@ -239,7 +277,7 @@ export default function Home() {
           ...(m.image ? { image: m.image, imageMimeType: m.imageMimeType } : {}),
         }));
 
-      const response = await fetch("/api/chat", {
+      const response = await fetchWithRetry("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: apiMessages, locale }),
@@ -418,6 +456,7 @@ export default function Home() {
 
   /* ── Scene selection ── */
   const handleSelectScene = (scene: SceneType) => {
+    setBrowsingHome(false);
     setActiveScene(scene);
     if (scene === "identify") {
       // Enter conversation with AI guidance, then open camera
@@ -441,7 +480,7 @@ export default function Home() {
     }
   };
 
-  const showEmptyState = messages.length === 0 && !isLoading;
+  const showEmptyState = (messages.length === 0 && !isLoading) || browsingHome;
 
   /* ── Scene label info ── */
   const sceneLabels: Record<string, string> = {
@@ -476,28 +515,38 @@ export default function Home() {
       {/* Toast */}
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}
 
-      {/* Onboarding Tour */}
-      {showOnboarding && <OnboardingTour locale={locale} onComplete={() => setShowOnboarding(false)} />}
+      {/* Onboarding Tour (lazy) */}
+      {showOnboarding && (
+        <Suspense fallback={null}>
+          <OnboardingTour locale={locale} onComplete={() => setShowOnboarding(false)} />
+        </Suspense>
+      )}
 
-      {/* Rating Modal */}
+      {/* Rating Modal (lazy) */}
       {showRatingModal && (
+        <Suspense fallback={null}>
         <RatingModal
           wineName={extractWineNameFromMessages(messages, locale)}
           onSubmit={handleRatingSubmit}
           onClose={() => { setShowRatingModal(false); setRatingData(null); }}
           locale={locale}
         />
+        </Suspense>
       )}
 
-      {/* Wine Cellar Page */}
-      <CellarPage visible={showCellar} onClose={() => setShowCellar(false)} cellar={cellar} onDelete={handleDeleteWine} locale={locale} />
+      {/* Wine Cellar Page (lazy) */}
+      {showCellar && (
+        <Suspense fallback={null}>
+          <CellarPage visible={showCellar} onClose={() => setShowCellar(false)} cellar={cellar} onDelete={handleDeleteWine} locale={locale} />
+        </Suspense>
+      )}
 
       {/* Header */}
       <header className="header-animate header-decorated flex items-center justify-between py-5 px-4">
         <div className="flex items-center gap-1">
           <button
             onClick={toggleLocale}
-            className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-[rgba(114,47,55,0.08)] active:scale-95 text-xs font-semibold"
+            className="w-10 h-10 rounded-full flex items-center justify-center transition-all wine-hover-bg active:scale-95 text-xs font-semibold"
             style={{ color: "var(--wine-deep)", fontFamily: "'Noto Serif SC', serif" }}
             title={locale === "zh" ? t(locale, "switchToEn") : t(locale, "switchToZh")}
           >
@@ -505,31 +554,31 @@ export default function Home() {
           </button>
           <button
             onClick={() => setShowOnboarding(true)}
-            className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-[rgba(114,47,55,0.08)] active:scale-95 text-xs font-semibold"
+            className="w-10 h-10 rounded-full flex items-center justify-center transition-all wine-hover-bg active:scale-95 text-xs font-semibold"
             style={{ color: "var(--wine-accent)", fontFamily: "'Cormorant Garamond', serif", fontSize: 16 }}
-            title={locale === "zh" ? "使用引导" : "Tour Guide"}
+            title={t(locale, "tourGuideTitle")}
           >
             ?
           </button>
         </div>
         <button
           onClick={() => {
+            // Bug fix #2: Logo navigates home without clearing conversation
+            // Use the dedicated + button for new chat (clear)
             if (messages.length > 0) {
+              setBrowsingHome(true);
               setActiveScene(null);
-              setMessages([]);
-              setStreamingContent("");
-              localStorage.removeItem(STORAGE_KEY);
             }
           }}
           className="text-center group"
           style={{ cursor: messages.length > 0 ? "pointer" : "default", background: "none", border: "none", padding: 0 }}
-          title={messages.length > 0 ? t(locale, "newChat") : undefined}
+          title={messages.length > 0 ? t(locale, "backHome") : undefined}
         >
           <h1
             className="text-2xl font-semibold tracking-wide flex items-center justify-center gap-1.5 transition-opacity group-hover:opacity-80"
             style={{ fontFamily: "'Cormorant Garamond', 'Noto Serif SC', serif", color: "var(--wine-deep)" }}
           >
-            {messages.length > 0 && (
+            {messages.length > 0 && !browsingHome && (
               <svg className="w-5 h-5 flex-shrink-0 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" style={{ color: "var(--wine-deep)" }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
               </svg>
@@ -546,7 +595,7 @@ export default function Home() {
           <button
             id="cellar-btn"
             onClick={() => setShowCellar(true)}
-            className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-[rgba(114,47,55,0.08)] active:scale-95"
+            className="w-10 h-10 rounded-full flex items-center justify-center transition-all wine-hover-bg active:scale-95"
             title={t(locale, "myCellar")}
           >
             <svg className="w-5 h-5" fill="none" stroke="var(--wine-deep)" strokeWidth={1.5} viewBox="0 0 24 24">
@@ -559,7 +608,7 @@ export default function Home() {
           {messages.length > 0 && (
             <button
               onClick={confirmClear}
-              className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-[rgba(114,47,55,0.08)] active:scale-95"
+              className="w-10 h-10 rounded-full flex items-center justify-center transition-all wine-hover-bg active:scale-95"
               title={t(locale, "newChat")}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" style={{ color: "var(--wine-deep)" }}>
@@ -575,15 +624,13 @@ export default function Home() {
         <div className="flex items-center justify-center gap-2 py-1.5 px-4">
           <button
             onClick={() => {
+              // Bug fix #1: ✕ only exits scene, preserves conversation
               setActiveScene(null);
-              setMessages([]);
-              setStreamingContent("");
-              localStorage.removeItem(STORAGE_KEY);
             }}
             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs transition-all hover:opacity-80 active:scale-95"
             style={{
               fontFamily: "'Noto Serif SC', serif",
-              backgroundColor: "rgba(114,47,55,0.06)",
+              backgroundColor: "var(--wine-subtle-bg)",
               color: "var(--wine-deep)",
               border: "1px solid var(--wine-border)",
             }}
@@ -592,6 +639,27 @@ export default function Home() {
             <svg className="w-3 h-3 opacity-50" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
+          </button>
+        </div>
+      )}
+
+      {/* Back to Chat floating button (when browsing home with existing conversation) */}
+      {browsingHome && messages.length > 0 && (
+        <div className="flex items-center justify-center py-1.5 px-4">
+          <button
+            onClick={() => setBrowsingHome(false)}
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs transition-all hover:opacity-80 active:scale-95"
+            style={{
+              fontFamily: "'Noto Serif SC', serif",
+              background: "linear-gradient(135deg, var(--wine-deep), var(--wine-medium))",
+              color: "white",
+              boxShadow: "var(--wine-shadow-strong)",
+            }}
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+            {t(locale, "backToChat")}
           </button>
         </div>
       )}
@@ -626,8 +694,12 @@ export default function Home() {
         />
       )}
 
-      {/* Image Lightbox */}
-      {lightboxImage && <ImageLightbox src={lightboxImage} onClose={() => setLightboxImage(null)} altText={t(locale, "enlarge")} />}
+      {/* Image Lightbox (lazy) */}
+      {lightboxImage && (
+        <Suspense fallback={null}>
+          <ImageLightbox src={lightboxImage} onClose={() => setLightboxImage(null)} altText={t(locale, "enlarge")} />
+        </Suspense>
+      )}
 
       {/* Input Area */}
       <ChatInput

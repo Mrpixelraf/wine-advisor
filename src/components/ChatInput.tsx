@@ -154,7 +154,7 @@ export default function ChatInput({
         {(pendingImage || imageLoading) && (
           <div className="image-preview-bar pb-2">
             {imageLoading ? (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl" style={{ backgroundColor: "rgba(139, 34, 82, 0.06)", border: "1px solid var(--wine-border)" }}>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl" style={{ backgroundColor: "var(--wine-subtle-bg)", border: "1px solid var(--wine-border)" }}>
                 <div className="image-loading-spinner" />
                 <span className="text-xs" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>
                   {t(locale, "processingImg")}
@@ -201,7 +201,7 @@ export default function ChatInput({
             className={`send-btn flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-30 ${sendBtnAnimate ? "send-btn-fly" : ""}`}
             style={{
               backgroundColor: (input.trim() || pendingImage) ? "var(--wine-deep)" : "var(--wine-light)",
-              boxShadow: (input.trim() || pendingImage) ? "0 2px 8px rgba(139, 34, 82, 0.3)" : "none",
+              boxShadow: (input.trim() || pendingImage) ? "var(--wine-shadow-strong)" : "none",
             }}
           >
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

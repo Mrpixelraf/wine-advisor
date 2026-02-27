@@ -38,7 +38,7 @@ export function MarkdownContent({ content, isStreaming = false }: { content: str
         strong: ({ children }) => <strong className="font-semibold" style={{ color: "var(--wine-deep)" }}>{children}</strong>,
         em: ({ children }) => <em className="italic" style={{ color: "var(--wine-medium)" }}>{children}</em>,
         blockquote: ({ children }) => <blockquote className="border-l-3 pl-3 my-2 italic opacity-80" style={{ borderColor: "var(--wine-gold)" }}>{children}</blockquote>,
-        code: ({ children }) => <code className="px-1.5 py-0.5 rounded text-xs" style={{ backgroundColor: "rgba(139, 34, 82, 0.1)", color: "var(--wine-deep)" }}>{children}</code>,
+        code: ({ children }) => <code className="px-1.5 py-0.5 rounded text-xs" style={{ backgroundColor: "var(--wine-subtle-bg)", color: "var(--wine-deep)" }}>{children}</code>,
         table: ({ children }) => (
           <div className="overflow-x-auto my-3 rounded-lg" style={{ border: "1px solid var(--wine-border)" }}>
             <table className="w-full text-sm border-collapse" style={{ fontFamily: "'Noto Serif SC', serif" }}>{children}</table>
@@ -51,7 +51,7 @@ export function MarkdownContent({ content, isStreaming = false }: { content: str
           const lineNum = node?.position?.start?.line ?? 0;
           const isEven = lineNum % 2 === 0;
           return (
-            <tr style={{ backgroundColor: isEven ? "rgba(139, 34, 82, 0.06)" : "transparent", borderBottom: "1px solid var(--wine-border)" }}>
+            <tr style={{ backgroundColor: isEven ? "var(--wine-subtle-bg)" : "transparent", borderBottom: "1px solid var(--wine-border)" }}>
               {children}
             </tr>
           );
@@ -74,7 +74,7 @@ function MessageActions({
   onAction: (action: MessageAction) => void;
 }) {
   return (
-    <div className="msg-actions flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: "1px solid rgba(139, 34, 82, 0.1)" }}>
+    <div className="msg-actions flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: "1px solid var(--wine-action-border)" }}>
       {actions.map((act) => (
         <button
           key={act.id}
@@ -127,13 +127,13 @@ export default function MessageBubble({
           ...(msg.role === "user"
             ? {
                 background: "linear-gradient(135deg, var(--wine-deep), var(--wine-medium))",
-                boxShadow: "0 2px 8px rgba(139, 34, 82, 0.2)",
+                boxShadow: "var(--wine-shadow-md)",
               }
             : {
                 backgroundColor: "var(--wine-card, #FFFFFF)",
                 borderColor: msg.isError ? "var(--wine-error)" : "var(--wine-border)",
                 color: "var(--wine-bubble-text)",
-                boxShadow: "0 1px 4px rgba(30, 26, 43, 0.06)",
+                boxShadow: "var(--wine-shadow)",
               }),
         }}
       >
@@ -160,7 +160,7 @@ export default function MessageBubble({
                   src={msg.image}
                   alt={t(locale, "userUploadedImg")}
                   className="chat-image-thumb rounded-xl cursor-pointer"
-                  style={{ maxWidth: "200px", maxHeight: "200px", objectFit: "cover", borderRadius: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
+                  style={{ maxWidth: "200px", maxHeight: "200px", objectFit: "cover", borderRadius: "12px", boxShadow: "var(--wine-img-shadow)" }}
                   onClick={() => onImageClick(msg.image!)}
                 />
               </div>

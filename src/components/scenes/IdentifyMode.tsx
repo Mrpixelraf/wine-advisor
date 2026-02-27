@@ -4,6 +4,7 @@
 // This component exists for consistency but is minimal.
 
 import type { Locale } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 
 interface IdentifyModeProps {
   locale: Locale;
@@ -24,7 +25,7 @@ export default function IdentifyMode({ locale, onOpenCamera }: IdentifyModeProps
         }}
       >
         <span>📷</span>
-        <span>{locale === "en" ? "Take Photo" : "拍照识酒"}</span>
+        <span>{t(locale, "identifyPhoto")}</span>
       </button>
     </div>
   );

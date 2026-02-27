@@ -7,6 +7,8 @@ export const translations = {
     brandSub: "Your Personal Sommelier · 好酒不必懂，懂你就够了",
     myCellar: "我的酒窖",
     newChat: "新对话",
+    backHome: "回到首页",
+    backToChat: "返回对话",
 
     // Home
     tagline: "您的AI侍酒师，随时待命",
@@ -139,6 +141,19 @@ export const translations = {
     sceneTastePhoto: "拍照开始",
     sceneTasteCellar: "从酒窖选择",
 
+    // Wine detail view
+    wineDetailTitle: "酒款详情",
+    tastingNotesLabel: "品鉴标签",
+    myNotesLabel: "我的笔记",
+    aiTastingNotesLabel: "AI品鉴笔记",
+
+    // Onboarding
+    onboardingSkip: "跳过",
+    tourGuideTitle: "使用引导",
+
+    // Identify mode
+    identifyPhoto: "拍照识酒",
+
     // Price unit
     priceUnit: "元",
   },
@@ -147,6 +162,8 @@ export const translations = {
     brandSub: "Your Personal Sommelier · Great Wine, No Pretense",
     myCellar: "My Cellar",
     newChat: "New Chat",
+    backHome: "Back to Home",
+    backToChat: "Back to Chat",
 
     tagline: "Your AI Sommelier, Always Ready",
     scenePrompt: "What's your situation?",
@@ -253,6 +270,19 @@ export const translations = {
     queryOccasion: "Recommend a wine for {0}",
     queryPrice: "Recommend a wine in the {0} range",
     queryDefault: "Recommend wines related to {0}",
+
+    // Wine detail view
+    wineDetailTitle: "Wine Details",
+    tastingNotesLabel: "Tasting Notes",
+    myNotesLabel: "My Notes",
+    aiTastingNotesLabel: "AI Tasting Notes",
+
+    // Onboarding
+    onboardingSkip: "Skip",
+    tourGuideTitle: "Tour Guide",
+
+    // Identify mode
+    identifyPhoto: "Take Photo",
 
     // Scene quick chips
     sceneRestChinese: "Chinese Cuisine",

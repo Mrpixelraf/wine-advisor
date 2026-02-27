@@ -23,6 +23,48 @@
   /* Gradients */
   --gradient-tasting: linear-gradient(135deg, #8B2252 0%, #D4A56A 100%);
   --gradient-evening: linear-gradient(180deg, #4A1942 0%, #1E1A2B 100%);
+  /* Dark-mode-aware functional tokens */
+  --wine-hover-bg: rgba(114, 47, 55, 0.08);
+  --wine-hover-bg-strong: rgba(114, 47, 55, 0.12);
+  --wine-subtle-bg: rgba(114, 47, 55, 0.06);
+  --wine-subtle-bg-lighter: rgba(114, 47, 55, 0.04);
+  --wine-shadow: 0 1px 4px rgba(30, 26, 43, 0.06);
+  --wine-shadow-md: 0 2px 8px rgba(139, 34, 82, 0.12);
+  --wine-shadow-lg: 0 4px 16px rgba(139, 34, 82, 0.15);
+  --wine-shadow-strong: 0 2px 8px rgba(139, 34, 82, 0.3);
+  --wine-shadow-xl: 0 8px 40px rgba(139, 34, 82, 0.2);
+  --wine-shadow-card: 0 2px 12px rgba(139, 34, 82, 0.06);
+  --wine-overlay-bg: rgba(26, 10, 14, 0.4);
+  --wine-overlay-bg-strong: rgba(26, 10, 14, 0.5);
+  --wine-overlay-dark: rgba(0, 0, 0, 0.7);
+  --wine-overlay-btn: rgba(0, 0, 0, 0.5);
+  --wine-action-border: rgba(139, 34, 82, 0.1);
+  --wine-action-bg: linear-gradient(135deg, rgba(114, 47, 55, 0.08), rgba(201, 169, 110, 0.12));
+  --wine-action-border-color: rgba(114, 47, 55, 0.15);
+  --wine-tag-bg: linear-gradient(135deg, rgba(114, 47, 55, 0.08), rgba(212, 165, 116, 0.12));
+  --wine-tag-border: rgba(114, 47, 55, 0.12);
+  --wine-tag-hover-bg: linear-gradient(135deg, rgba(114, 47, 55, 0.15), rgba(212, 165, 116, 0.2));
+  --wine-tag-active-bg: linear-gradient(135deg, rgba(114, 47, 55, 0.22), rgba(212, 165, 116, 0.28));
+  --wine-recommend-bg: rgba(255, 255, 255, 0.7);
+  --wine-recommend-border: rgba(212, 165, 116, 0.3);
+  --wine-quick-btn-bg: rgba(255, 255, 255, 0.6);
+  --wine-empty-radial-1: rgba(114, 47, 55, 0.03);
+  --wine-empty-radial-2: rgba(212, 165, 116, 0.04);
+  --wine-glow-border: rgba(201, 169, 110, 0.6);
+  --wine-glow-shadow: 0 0 20px rgba(201, 169, 110, 0.4), inset 0 0 20px rgba(201, 169, 110, 0.1);
+  --wine-glow-shadow-pulse: 0 0 32px rgba(201, 169, 110, 0.6), inset 0 0 32px rgba(201, 169, 110, 0.2);
+  --wine-skip-color: rgba(255, 255, 255, 0.8);
+  --wine-skip-bg: rgba(255, 255, 255, 0.12);
+  --wine-skip-border: rgba(255, 255, 255, 0.25);
+  --wine-card-overlay-shadow: 0 16px 64px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --wine-img-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --wine-lightbox-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+  --wine-rating-low: #999;
+  --wine-rating-mid: #C9A96E;
+  --wine-rating-high: #8B2252;
+  --wine-disabled-bg: rgba(114, 47, 55, 0.04);
+  --wine-disabled-border: rgba(114, 47, 55, 0.08);
+  --wine-cellar-card-border: rgba(114, 47, 55, 0.06);
   /* iOS safe area */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -59,6 +101,48 @@ body {
   --wine-gold: #E0BA80;
   --wine-accent: #E0BA80;
   --wine-gold-warm: #E0BA80;
+  /* Dark functional tokens */
+  --wine-hover-bg: rgba(199, 91, 142, 0.12);
+  --wine-hover-bg-strong: rgba(199, 91, 142, 0.18);
+  --wine-subtle-bg: rgba(199, 91, 142, 0.10);
+  --wine-subtle-bg-lighter: rgba(199, 91, 142, 0.06);
+  --wine-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  --wine-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --wine-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --wine-shadow-strong: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --wine-shadow-xl: 0 8px 40px rgba(0, 0, 0, 0.5);
+  --wine-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --wine-overlay-bg: rgba(0, 0, 0, 0.6);
+  --wine-overlay-bg-strong: rgba(0, 0, 0, 0.7);
+  --wine-overlay-dark: rgba(0, 0, 0, 0.85);
+  --wine-overlay-btn: rgba(0, 0, 0, 0.6);
+  --wine-action-border: rgba(199, 91, 142, 0.15);
+  --wine-action-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.12), rgba(224, 186, 128, 0.15));
+  --wine-action-border-color: rgba(199, 91, 142, 0.2);
+  --wine-tag-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.12), rgba(224, 186, 128, 0.15));
+  --wine-tag-border: rgba(199, 91, 142, 0.18);
+  --wine-tag-hover-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.2), rgba(224, 186, 128, 0.25));
+  --wine-tag-active-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.3), rgba(224, 186, 128, 0.35));
+  --wine-recommend-bg: rgba(42, 38, 54, 0.8);
+  --wine-recommend-border: rgba(224, 186, 128, 0.3);
+  --wine-quick-btn-bg: rgba(42, 38, 54, 0.7);
+  --wine-empty-radial-1: rgba(199, 91, 142, 0.06);
+  --wine-empty-radial-2: rgba(224, 186, 128, 0.06);
+  --wine-glow-border: rgba(224, 186, 128, 0.5);
+  --wine-glow-shadow: 0 0 20px rgba(224, 186, 128, 0.3), inset 0 0 20px rgba(224, 186, 128, 0.08);
+  --wine-glow-shadow-pulse: 0 0 32px rgba(224, 186, 128, 0.5), inset 0 0 32px rgba(224, 186, 128, 0.15);
+  --wine-skip-color: rgba(255, 255, 255, 0.8);
+  --wine-skip-bg: rgba(255, 255, 255, 0.1);
+  --wine-skip-border: rgba(255, 255, 255, 0.2);
+  --wine-card-overlay-shadow: 0 16px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --wine-img-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --wine-lightbox-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  --wine-rating-low: #8A8690;
+  --wine-rating-mid: #E0BA80;
+  --wine-rating-high: #C75B8E;
+  --wine-disabled-bg: rgba(199, 91, 142, 0.06);
+  --wine-disabled-border: rgba(199, 91, 142, 0.1);
+  --wine-cellar-card-border: rgba(199, 91, 142, 0.1);
 }
 
 /* Dark mode — @media fallback (when no .dark or .light class is set) */
@@ -76,6 +160,48 @@ body {
     --wine-gold: #E0BA80;
     --wine-accent: #E0BA80;
     --wine-gold-warm: #E0BA80;
+    /* Dark functional tokens */
+    --wine-hover-bg: rgba(199, 91, 142, 0.12);
+    --wine-hover-bg-strong: rgba(199, 91, 142, 0.18);
+    --wine-subtle-bg: rgba(199, 91, 142, 0.10);
+    --wine-subtle-bg-lighter: rgba(199, 91, 142, 0.06);
+    --wine-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    --wine-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
+    --wine-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --wine-shadow-strong: 0 2px 8px rgba(0, 0, 0, 0.5);
+    --wine-shadow-xl: 0 8px 40px rgba(0, 0, 0, 0.5);
+    --wine-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.3);
+    --wine-overlay-bg: rgba(0, 0, 0, 0.6);
+    --wine-overlay-bg-strong: rgba(0, 0, 0, 0.7);
+    --wine-overlay-dark: rgba(0, 0, 0, 0.85);
+    --wine-overlay-btn: rgba(0, 0, 0, 0.6);
+    --wine-action-border: rgba(199, 91, 142, 0.15);
+    --wine-action-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.12), rgba(224, 186, 128, 0.15));
+    --wine-action-border-color: rgba(199, 91, 142, 0.2);
+    --wine-tag-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.12), rgba(224, 186, 128, 0.15));
+    --wine-tag-border: rgba(199, 91, 142, 0.18);
+    --wine-tag-hover-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.2), rgba(224, 186, 128, 0.25));
+    --wine-tag-active-bg: linear-gradient(135deg, rgba(199, 91, 142, 0.3), rgba(224, 186, 128, 0.35));
+    --wine-recommend-bg: rgba(42, 38, 54, 0.8);
+    --wine-recommend-border: rgba(224, 186, 128, 0.3);
+    --wine-quick-btn-bg: rgba(42, 38, 54, 0.7);
+    --wine-empty-radial-1: rgba(199, 91, 142, 0.06);
+    --wine-empty-radial-2: rgba(224, 186, 128, 0.06);
+    --wine-glow-border: rgba(224, 186, 128, 0.5);
+    --wine-glow-shadow: 0 0 20px rgba(224, 186, 128, 0.3), inset 0 0 20px rgba(224, 186, 128, 0.08);
+    --wine-glow-shadow-pulse: 0 0 32px rgba(224, 186, 128, 0.5), inset 0 0 32px rgba(224, 186, 128, 0.15);
+    --wine-skip-color: rgba(255, 255, 255, 0.8);
+    --wine-skip-bg: rgba(255, 255, 255, 0.1);
+    --wine-skip-border: rgba(255, 255, 255, 0.2);
+    --wine-card-overlay-shadow: 0 16px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    --wine-img-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --wine-lightbox-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+    --wine-rating-low: #8A8690;
+    --wine-rating-mid: #E0BA80;
+    --wine-rating-high: #C75B8E;
+    --wine-disabled-bg: rgba(199, 91, 142, 0.06);
+    --wine-disabled-border: rgba(199, 91, 142, 0.1);
+    --wine-cellar-card-border: rgba(199, 91, 142, 0.1);
   }
 }
 
@@ -141,7 +267,7 @@ body {
 
 .msg-bubble:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(114, 47, 55, 0.1);
+  box-shadow: var(--wine-shadow-md);
 }
 
 /* ═══ Header animations ═══ */
@@ -227,7 +353,7 @@ body {
   position: relative;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--wine-quick-btn-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -244,7 +370,7 @@ body {
 
 .quick-btn:hover {
   transform: scale(1.03);
-  box-shadow: 0 6px 20px rgba(114, 47, 55, 0.15);
+  box-shadow: var(--wine-shadow-lg);
   border-color: var(--wine-deep) !important;
 }
 
@@ -271,11 +397,11 @@ body {
 /* ═══ AI avatar breathing/pulse animation ═══ */
 @keyframes breathe {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(114, 47, 55, 0.3);
+    box-shadow: 0 0 0 0 var(--wine-hover-bg);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 0 6px rgba(114, 47, 55, 0);
+    box-shadow: 0 0 0 6px transparent;
     transform: scale(1.05);
   }
 }
@@ -321,8 +447,8 @@ body {
 .input-container:focus-within {
   border-color: var(--wine-deep);
   box-shadow:
-    0 0 0 3px rgba(114, 47, 55, 0.08),
-    0 0 20px rgba(212, 165, 116, 0.12);
+    0 0 0 3px var(--wine-hover-bg),
+    0 0 20px var(--wine-subtle-bg);
 }
 
 /* ═══ Wine glass swirl loading animation ═══ */
@@ -437,8 +563,8 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 600px 400px at 20% 50%, rgba(114, 47, 55, 0.03) 0%, transparent 70%),
-    radial-gradient(ellipse 600px 400px at 80% 50%, rgba(212, 165, 116, 0.04) 0%, transparent 70%);
+    radial-gradient(ellipse 600px 400px at 20% 50%, var(--wine-empty-radial-1) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 400px at 80% 50%, var(--wine-empty-radial-2) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -468,18 +594,18 @@ body {
   border-radius: 20px;
   font-size: 12px;
   font-family: 'Noto Serif SC', serif;
-  background: linear-gradient(135deg, rgba(114, 47, 55, 0.08), rgba(212, 165, 116, 0.12));
+  background: var(--wine-tag-bg);
   color: var(--wine-deep);
-  border: 1px solid rgba(114, 47, 55, 0.12);
+  border: 1px solid var(--wine-tag-border);
   transition: all 0.25s ease;
   animation: tagFadeIn 0.3s ease both;
 }
 
 .taste-tag:hover,
 .taste-tag-clickable:hover {
-  background: linear-gradient(135deg, rgba(114, 47, 55, 0.15), rgba(212, 165, 116, 0.2));
+  background: var(--wine-tag-hover-bg);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(114, 47, 55, 0.1);
+  box-shadow: var(--wine-shadow-md);
 }
 
 .taste-tag-clickable {
@@ -491,8 +617,8 @@ body {
 
 .taste-tag-clickable:active {
   transform: scale(0.95);
-  background: linear-gradient(135deg, rgba(114, 47, 55, 0.22), rgba(212, 165, 116, 0.28));
-  box-shadow: 0 1px 4px rgba(114, 47, 55, 0.15);
+  background: var(--wine-tag-active-bg);
+  box-shadow: var(--wine-shadow);
 }
 
 /* Taste section recommend button */
@@ -504,8 +630,8 @@ body {
   font-size: 13px;
   font-family: 'Noto Serif SC', serif;
   color: var(--wine-deep);
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(212, 165, 116, 0.3);
+  background: var(--wine-recommend-bg);
+  border: 1px solid var(--wine-recommend-border);
   transition: all 0.3s ease;
   cursor: pointer;
   backdrop-filter: blur(4px);
@@ -523,7 +649,7 @@ body {
 
 .taste-recommend-btn:hover {
   transform: scale(1.03);
-  box-shadow: 0 4px 16px rgba(201, 169, 110, 0.2);
+  box-shadow: var(--wine-shadow-lg);
   border-color: var(--wine-gold-warm);
 }
 
@@ -579,6 +705,11 @@ body {
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--wine-accent), transparent);
+}
+
+/* ═══ Wine hover background utility ═══ */
+.wine-hover-bg:hover {
+  background-color: var(--wine-hover-bg);
 }
 
 /* ═══ Touch feedback for mobile ═══ */
@@ -692,7 +823,7 @@ body {
 }
 
 .action-sheet-overlay {
-  background-color: rgba(26, 10, 14, 0.4);
+  background-color: var(--wine-overlay-bg);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   animation: actionSheetOverlayIn 0.2s ease-out;
@@ -703,11 +834,11 @@ body {
 }
 
 .action-sheet-card {
-  box-shadow: 0 -4px 20px rgba(114, 47, 55, 0.1);
+  box-shadow: var(--wine-shadow-md);
 }
 
 .action-sheet-btn:active {
-  background-color: rgba(114, 47, 55, 0.06) !important;
+  background-color: var(--wine-subtle-bg) !important;
 }
 
 /* ═══ Image preview bar ═══ */
@@ -763,7 +894,7 @@ body {
 
 .camera-btn:hover:not(:disabled) {
   border-color: var(--wine-deep) !important;
-  background-color: rgba(114, 47, 55, 0.06) !important;
+  background-color: var(--wine-subtle-bg) !important;
 }
 
 /* ═══ Lightbox ═══ */
@@ -778,7 +909,7 @@ body {
 }
 
 .lightbox-overlay {
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: var(--wine-overlay-dark);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   animation: lightboxOverlayIn 0.25s ease-out;
@@ -795,7 +926,7 @@ body {
 
 .chat-image-thumb:hover {
   transform: scale(1.03);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: var(--wine-shadow-lg) !important;
 }
 
 .chat-image-thumb:active {
@@ -811,8 +942,8 @@ body {
   border-radius: 12px;
   font-size: 13px;
   font-family: 'Noto Serif SC', serif;
-  background: linear-gradient(135deg, rgba(114, 47, 55, 0.08), rgba(201, 169, 110, 0.12));
-  border: 1px solid rgba(114, 47, 55, 0.15);
+  background: var(--wine-action-bg);
+  border: 1px solid var(--wine-action-border-color);
   color: var(--wine-deep);
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -832,7 +963,7 @@ body {
 
 .msg-action-btn:not(:disabled):hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(114, 47, 55, 0.15);
+  box-shadow: var(--wine-shadow-lg);
   border-color: var(--wine-deep);
 }
 
@@ -854,8 +985,8 @@ body {
 .msg-action-btn:disabled {
   opacity: 0.45;
   cursor: default;
-  background: rgba(114, 47, 55, 0.04);
-  border-color: rgba(114, 47, 55, 0.08);
+  background: var(--wine-disabled-bg);
+  border-color: var(--wine-disabled-border);
 }
 
 .msg-action-icon {
@@ -882,7 +1013,7 @@ body {
 }
 
 .rating-overlay {
-  background-color: rgba(26, 10, 14, 0.5);
+  background-color: var(--wine-overlay-bg-strong);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   animation: ratingOverlayIn 0.2s ease-out;
@@ -890,7 +1021,7 @@ body {
 
 .rating-modal {
   animation: ratingModalSlideUp 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 0 -8px 40px rgba(114, 47, 55, 0.2);
+  box-shadow: var(--wine-shadow-xl);
 }
 
 /* Custom range slider */
@@ -899,7 +1030,7 @@ body {
   appearance: none;
   height: 6px;
   border-radius: 3px;
-  background: linear-gradient(90deg, #ccc 0%, var(--wine-gold-warm) 50%, var(--wine-deep) 100%);
+  background: linear-gradient(90deg, var(--wine-rating-low) 0%, var(--wine-gold-warm) 50%, var(--wine-deep) 100%);
   outline: none;
 }
 
@@ -911,7 +1042,7 @@ body {
   border-radius: 50%;
   background: white;
   border: 3px solid var(--wine-deep);
-  box-shadow: 0 2px 8px rgba(114, 47, 55, 0.3);
+  box-shadow: var(--wine-shadow-strong);
   cursor: pointer;
   transition: transform 0.15s ease;
 }
@@ -926,7 +1057,7 @@ body {
   border-radius: 50%;
   background: white;
   border: 3px solid var(--wine-deep);
-  box-shadow: 0 2px 8px rgba(114, 47, 55, 0.3);
+  box-shadow: var(--wine-shadow-strong);
   cursor: pointer;
 }
 
@@ -988,7 +1119,7 @@ body {
 
 .cellar-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(114, 47, 55, 0.1) !important;
+  box-shadow: var(--wine-shadow-lg) !important;
 }
 
 .cellar-card:active {
@@ -1031,7 +1162,7 @@ body {
 
 .scenario-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(114, 47, 55, 0.15);
+  box-shadow: var(--wine-shadow-lg);
   border-color: var(--wine-deep) !important;
 }
 
@@ -1076,10 +1207,10 @@ body {
 }
 
 .route-choice-btn:hover:not(:disabled) {
-  background-color: rgba(114, 47, 55, 0.12) !important;
+  background-color: var(--wine-hover-bg-strong) !important;
   border-color: var(--wine-deep) !important;
   transform: translateX(2px);
-  box-shadow: 0 2px 12px rgba(114, 47, 55, 0.1);
+  box-shadow: var(--wine-shadow-md);
 }
 
 .route-choice-btn:active:not(:disabled) {
@@ -1103,7 +1234,7 @@ body {
 
 .cellar-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(114, 47, 55, 0.1) !important;
+  box-shadow: var(--wine-shadow-lg) !important;
 }
 
 .cellar-card:active {
@@ -1114,7 +1245,7 @@ body {
 .cellar-rating {
   min-width: 28px;
   text-align: center;
-  box-shadow: 0 1px 4px rgba(114, 47, 55, 0.2);
+  box-shadow: var(--wine-shadow);
 }
 
 /* Line clamp utility */
@@ -1153,7 +1284,7 @@ body {
 
 .tasting-chip:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(114, 47, 55, 0.1);
+  box-shadow: var(--wine-shadow-md);
 }
 
 /* ═══ Onboarding Tour ═══ */
@@ -1202,9 +1333,14 @@ body {
   animation: onboardingIconBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
 }
 
+@keyframes onboarding-glow-pulse {
+  0%, 100% { opacity: 1; box-shadow: var(--wine-glow-shadow); }
+  50% { opacity: 0.6; box-shadow: var(--wine-glow-shadow-pulse); }
+}
+
 .onboarding-cta-btn:hover {
   transform: scale(1.02);
-  box-shadow: 0 6px 24px rgba(139, 34, 82, 0.4) !important;
+  box-shadow: var(--wine-shadow-xl) !important;
 }
 
 .onboarding-cta-btn:active {
@@ -1214,5 +1350,5 @@ body {
 .onboarding-skip-btn:hover {
   color: rgba(255, 255, 255, 0.95) !important;
   background: rgba(255, 255, 255, 0.18) !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
 }

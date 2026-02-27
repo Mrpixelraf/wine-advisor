@@ -22,9 +22,9 @@ export default function RatingModal({
   const [selectedTags, setSelectedTags] = useState<WineTags>({});
 
   const getRatingColor = (val: number) => {
-    if (val < 40) return "#999";
-    if (val < 70) return "#C9A96E";
-    return "#8B2252";
+    if (val < 40) return "var(--wine-rating-low)";
+    if (val < 70) return "var(--wine-rating-mid)";
+    return "var(--wine-rating-high)";
   };
 
   const toggleTag = (category: keyof WineTags, tag: string) => {
@@ -55,7 +55,7 @@ export default function RatingModal({
             <h3 className="text-base font-semibold" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>
               {t(locale, "ratingTitle")}
             </h3>
-            <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(114,47,55,0.08)", color: "var(--wine-deep)" }}>
+            <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "var(--wine-hover-bg)", color: "var(--wine-deep)" }}>
               ✕
             </button>
           </div>
@@ -86,8 +86,8 @@ export default function RatingModal({
               style={{ accentColor: getRatingColor(rating) }}
             />
             <div className="flex justify-between mt-1">
-              <span className="text-xs" style={{ color: "#999" }}>1</span>
-              <span className="text-xs" style={{ color: "#999" }}>100</span>
+              <span className="text-xs" style={{ color: "var(--wine-rating-low)" }}>1</span>
+              <span className="text-xs" style={{ color: "var(--wine-rating-low)" }}>100</span>
             </div>
           </div>
 
@@ -113,7 +113,7 @@ export default function RatingModal({
                         className="tasting-chip px-3 py-1.5 rounded-full text-xs transition-all active:scale-95"
                         style={{
                           fontFamily: "'Noto Serif SC', serif",
-                          backgroundColor: selected ? "var(--wine-deep)" : "rgba(114,47,55,0.06)",
+                          backgroundColor: selected ? "var(--wine-deep)" : "var(--wine-subtle-bg)",
                           color: selected ? "#FFFFFF" : "var(--wine-text)",
                           border: selected ? "1px solid var(--wine-deep)" : "1px solid var(--wine-border)",
                           fontWeight: selected ? 500 : 400,
@@ -147,7 +147,7 @@ export default function RatingModal({
             style={{
               fontFamily: "'Noto Serif SC', serif",
               background: "linear-gradient(135deg, var(--wine-deep), var(--wine-medium))",
-              boxShadow: "0 4px 16px rgba(139, 34, 82, 0.3)",
+              boxShadow: "var(--wine-shadow-strong)",
             }}
           >
             {t(locale, "ratingSave")}

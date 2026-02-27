@@ -85,13 +85,13 @@ export function ImagePreviewBar({
             height: 72,
             objectFit: "cover",
             border: "2px solid var(--wine-border)",
-            boxShadow: "0 2px 12px rgba(139, 34, 82, 0.12)",
+            boxShadow: "var(--wine-shadow-md)",
           }}
         />
         <button
           onClick={onRemove}
           className="image-preview-remove absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
-          style={{ backgroundColor: "var(--wine-deep)", boxShadow: "0 2px 6px rgba(139, 34, 82, 0.3)" }}
+          style={{ backgroundColor: "var(--wine-deep)", boxShadow: "var(--wine-shadow-strong)" }}
         >
           ✕
         </button>
@@ -114,7 +114,7 @@ export function ImageLightbox({
     <div className="lightbox-overlay fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
       <button
         className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white text-lg z-10"
-        style={{ backgroundColor: "rgba(0,0,0,0.5)", top: "calc(16px + var(--safe-top))" }}
+        style={{ backgroundColor: "var(--wine-overlay-btn)", top: "calc(16px + var(--safe-top))" }}
         onClick={onClose}
       >
         ✕
@@ -123,7 +123,7 @@ export function ImageLightbox({
         src={src}
         alt={altText || "Full size"}
         className="lightbox-image max-w-[92vw] max-h-[85vh] rounded-xl object-contain"
-        style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.4)" }}
+        style={{ boxShadow: "var(--wine-lightbox-shadow)" }}
         onClick={(e) => e.stopPropagation()}
       />
     </div>

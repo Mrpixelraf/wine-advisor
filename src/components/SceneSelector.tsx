@@ -88,9 +88,9 @@ export default function SceneSelector({
             </span>
           </button>
 
-          {/* Scene 3: Identify */}
+          {/* Scene 3: Identify — Bug fix #3: unified flow, enter chat first then camera */}
           <button
-            onClick={onOpenCamera}
+            onClick={() => onSelectScene("identify")}
             className="scenario-card quick-btn-animate stagger-3 flex flex-col items-start p-4 rounded-2xl border text-left transition-all"
             style={{ borderColor: "var(--wine-border)", background: "var(--wine-card)", backdropFilter: "blur(8px)" }}
           >
@@ -140,7 +140,7 @@ export default function SceneSelector({
                 fontFamily: "'Noto Serif SC', serif",
                 color: "var(--wine-deep)",
                 border: "1px solid var(--wine-border)",
-                background: "rgba(255,255,255,0.5)",
+                background: "var(--wine-quick-btn-bg)",
                 animationDelay: `${0.3 + idx * 0.05}s`,
               }}
             >

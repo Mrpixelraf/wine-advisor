@@ -1,6 +1,9 @@
 "use client";
 
-export default function WineGlassLoader({ locale = "zh" }: { locale?: string }) {
+import type { Locale } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
+
+export default function WineGlassLoader({ locale = "zh" }: { locale?: Locale }) {
   return (
     <div className="wine-glass-loader">
       <div className="glass-bowl">
@@ -9,7 +12,7 @@ export default function WineGlassLoader({ locale = "zh" }: { locale?: string }) 
       <div className="glass-stem" />
       <div className="glass-base" />
       <span className="shimmer-text">
-        {locale === "en" ? "Tasting…" : "品鉴中…"}
+        {t(locale, "analyzing")}
       </span>
     </div>
   );
