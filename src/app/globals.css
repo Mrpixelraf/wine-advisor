@@ -420,10 +420,24 @@ body {
   animation: tagFadeIn 0.3s ease both;
 }
 
-.taste-tag:hover {
+.taste-tag:hover,
+.taste-tag-clickable:hover {
   background: linear-gradient(135deg, rgba(114, 47, 55, 0.15), rgba(212, 165, 116, 0.2));
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(114, 47, 55, 0.1);
+}
+
+.taste-tag-clickable {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.taste-tag-clickable:active {
+  transform: scale(0.95);
+  background: linear-gradient(135deg, rgba(114, 47, 55, 0.22), rgba(212, 165, 116, 0.28));
+  box-shadow: 0 1px 4px rgba(114, 47, 55, 0.15);
 }
 
 /* Taste section recommend button */
