@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { type Locale, loadLocale, saveLocale, t } from "@/lib/i18n";
+// heic2any imported dynamically (SSR-incompatible, uses window)
 
 /* ─── Types ─── */
 interface MessageAction {
@@ -22,6 +24,7 @@ interface Message {
   image?: string;
   imageMimeType?: string;
   actions?: MessageAction[];
+  hidden?: boolean;
 }
 
 interface TasteProfile {
@@ -694,7 +697,7 @@ function RatingModal({
   const getRatingColor = (val: number) => {
     if (val < 40) return "#999";
     if (val < 70) return "#C9A96E";
-    return "#722F37";
+    return "#8B2252";
   };
 
   return (
@@ -972,6 +975,7 @@ export default function Home() {
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [ratingData, setRatingData] = useState<{ aiNotes: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [locale, setLocale] = useState<Locale>("zh");
 
   /* ── Refs ── */
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -987,6 +991,7 @@ export default function Home() {
     setMessages(loadMessages());
     setTasteProfile(loadTasteProfile());
     setCellar(loadCellar());
+    setLocale(loadLocale());
     setHydrated(true);
   }, []);
 
@@ -1033,13 +1038,27 @@ export default function Home() {
 
   /* ── Image handling ── */
   const handleImageFile = async (file: File) => {
-    if (!file || !file.type.startsWith("image/")) return;
+    if (!file) return;
+    // Accept image/* and HEIC/HEIF (iPhone photos)
+    const isImage = file.type.startsWith("image/") || /\.(heic|heif)$/i.test(file.name);
+    if (!isImage) return;
     setImageLoading(true);
     try {
-      const compressed = await compressImage(file);
+      let processFile = file;
+      // Convert HEIC/HEIF to JPEG for browser compatibility
+      if (file.type === "image/heic" || file.type === "image/heif" || /\.(heic|heif)$/i.test(file.name)) {
+        const heic2any = (await import("heic2any")).default;
+        const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.8 });
+        processFile = new File(
+          [converted as Blob],
+          file.name.replace(/\.(heic|heif)$/i, ".jpg"),
+          { type: "image/jpeg" }
+        );
+      }
+      const compressed = await compressImage(processFile);
       setPendingImage(compressed);
     } catch (err) {
-      console.error("Image compression failed:", err);
+      console.error("Image processing failed:", err);
     } finally {
       setImageLoading(false);
       setShowActionSheet(false);
@@ -1072,6 +1091,72 @@ export default function Home() {
   }, []);
 
   /* ── Send message ── */
+  /* Start a scenario: send hidden prompt to AI, only show AI response (no user bubble) */
+  const startScenario = async (hiddenPrompt: string) => {
+    if (isLoading) return;
+
+    if (messages.length === 0) {
+      setTransitioning(true);
+      await new Promise(resolve => setTimeout(resolve, 280));
+      setTransitioning(false);
+    }
+
+    setIsLoading(true);
+    setStreamingContent("");
+    userScrolledRef.current = false;
+
+    try {
+      // Send hidden prompt as user message to API but don't display it
+      const apiMessages = [{ role: "user" as const, content: hiddenPrompt }];
+
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: apiMessages, locale }),
+      });
+
+      if (!response.ok) {
+        const statusText = response.status === 429 ? "请求过于频繁，请稍后重试" : "请求失败";
+        setMessages([{ role: "assistant", content: `⚠️ ${statusText}`, isError: true }]);
+        setIsLoading(false);
+        return;
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) return;
+      const decoder = new TextDecoder();
+      let fullContent = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n");
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const data = line.slice(6);
+            if (data === "[DONE]") continue;
+            try { const parsed = JSON.parse(data); fullContent += parsed.content || ""; setStreamingContent(fullContent); } catch {}
+          }
+        }
+      }
+
+      if (fullContent) {
+        // Store the hidden prompt context so future messages know the scenario
+        const scenarioMessages: Message[] = [
+          { role: "user", content: hiddenPrompt, hidden: true },
+          { role: "assistant", content: fullContent },
+        ];
+        setMessages(scenarioMessages);
+      }
+    } catch {
+      setMessages([{ role: "assistant", content: "⚠️ 网络连接失败，请检查网络后重试", isError: true }]);
+    } finally {
+      setIsLoading(false);
+      setStreamingContent("");
+    }
+  };
+
   const sendMessage = async (directMessage?: string) => {
     const text = directMessage || input.trim();
     const hasImage = !!pendingImage;
@@ -1104,7 +1189,7 @@ export default function Home() {
     userScrolledRef.current = false;
 
     try {
-      const apiMessages = newMessages.map((m) => ({
+      const apiMessages = newMessages.filter(m => !m.hidden || m.role === "user").map((m) => ({
         role: m.role,
         content: m.content,
         ...(m.image ? { image: m.image, imageMimeType: m.imageMimeType } : {}),
@@ -1113,7 +1198,7 @@ export default function Home() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: apiMessages }),
+        body: JSON.stringify({ messages: apiMessages, locale }),
       });
 
       if (!response.ok) {
@@ -1250,6 +1335,13 @@ export default function Home() {
     setToast("已从酒窖删除");
   };
 
+  /* ── Language toggle ── */
+  const toggleLocale = () => {
+    const next = locale === "zh" ? "en" : "zh";
+    setLocale(next);
+    saveLocale(next);
+  };
+
   /* ── Retry ── */
   const retryLastMessage = () => {
     if (!lastUserMsgRef.current || isLoading) return;
@@ -1324,12 +1416,19 @@ export default function Home() {
 
       {/* Header */}
       <header className="header-animate header-decorated flex items-center justify-between py-5 px-4">
-        <div className="w-10" />
+        <button
+          onClick={toggleLocale}
+          className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-[rgba(114,47,55,0.08)] active:scale-95 text-xs font-semibold"
+          style={{ color: "var(--wine-deep)", fontFamily: "'Noto Serif SC', serif" }}
+          title={locale === "zh" ? "Switch to English" : "切换到中文"}
+        >
+          {locale === "zh" ? "EN" : "中"}
+        </button>
         <button
           onClick={() => { if (messages.length > 0) confirmClear(); }}
           className="text-center group"
           style={{ cursor: messages.length > 0 ? "pointer" : "default", background: "none", border: "none", padding: 0 }}
-          title={messages.length > 0 ? "回到主页" : undefined}
+          title={messages.length > 0 ? t(locale, "newChat") : undefined}
         >
           <h1
             className="text-2xl font-semibold tracking-wide flex items-center justify-center gap-1.5 transition-opacity group-hover:opacity-80"
@@ -1341,11 +1440,11 @@ export default function Home() {
               </svg>
             )}
             <span style={{ color: "var(--wine-gold-warm)" }}>✦</span>
-            {" "}瑞莫品酒顾问{" "}
+            {" "}{t(locale, "brandName")}{" "}
             <span style={{ color: "var(--wine-gold-warm)" }}>✦</span>
           </h1>
           <p className="text-xs mt-1.5 tracking-wider" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)", opacity: 0.7 }}>
-            Raymo Wine Advisor · AI驱动的专业品酒体验
+            {t(locale, "brandSub")}
           </p>
         </button>
         <div className="flex items-center gap-1">
@@ -1383,69 +1482,67 @@ export default function Home() {
             {/* Brand Header */}
             <div className="wine-icon-float text-5xl mt-6 mb-3">🍷</div>
             <div className="wine-decoration text-center mb-1">
-              <h2 className="text-lg font-medium" style={{ fontFamily: "'Cormorant Garamond', 'Noto Serif SC', serif", color: "var(--wine-deep)" }}>您的AI侍酒师，随时待命</h2>
+              <h2 className="text-lg font-medium" style={{ fontFamily: "'Cormorant Garamond', 'Noto Serif SC', serif", color: "var(--wine-deep)" }}>{t(locale, "tagline")}</h2>
             </div>
 
             {/* Scenario Cards */}
             <div className="w-full max-w-md px-4 mt-5 space-y-3">
-              <p className="text-xs text-center mb-3" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)", opacity: 0.7 }}>您现在的场景是？</p>
+              <p className="text-xs text-center mb-3" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)", opacity: 0.7 }}>{t(locale, "scenePrompt")}</p>
 
               <div className="grid grid-cols-2 gap-3">
-                {/* 在餐厅 */}
+                {/* Scene 1: Restaurant */}
                 <button
-                  onClick={() => sendMessage("我现在在餐厅，想找一款合适的酒搭配今天的菜，请问你需要了解什么信息来帮我推荐？")}
+                  onClick={() => startScenario(t(locale, "scene1Msg"))}
                   className="scenario-card quick-btn-animate stagger-1 flex flex-col items-start p-4 rounded-2xl border text-left transition-all"
                   style={{ borderColor: "var(--wine-light)", background: "rgba(255,255,255,0.7)", backdropFilter: "blur(8px)" }}
                 >
                   <span className="text-2xl mb-2">🍽️</span>
-                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>在餐厅</span>
-                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>找搭配，快速推荐</span>
+                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>{t(locale, "scene1Title")}</span>
+                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>{t(locale, "scene1Desc")}</span>
                 </button>
 
-                {/* 选购葡萄酒 */}
+                {/* Scene 2: Shopping */}
                 <button
-                  onClick={() => sendMessage("我想选购一瓶葡萄酒，能帮我推荐吗？请先问我一些问题来了解我的需求。")}
+                  onClick={() => startScenario(t(locale, "scene2Msg"))}
                   className="scenario-card quick-btn-animate stagger-2 flex flex-col items-start p-4 rounded-2xl border text-left transition-all"
                   style={{ borderColor: "var(--wine-light)", background: "rgba(255,255,255,0.7)", backdropFilter: "blur(8px)" }}
                 >
                   <span className="text-2xl mb-2">🛒</span>
-                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>选购葡萄酒</span>
-                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>按场景、口味、预算选酒</span>
+                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>{t(locale, "scene2Title")}</span>
+                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>{t(locale, "scene2Desc")}</span>
                 </button>
 
-                {/* 认识一瓶酒 */}
+                {/* Scene 3: Identify */}
                 <button
-                  onClick={() => {
-                    setShowActionSheet(true);
-                  }}
+                  onClick={() => { setShowActionSheet(true); }}
                   className="scenario-card quick-btn-animate stagger-3 flex flex-col items-start p-4 rounded-2xl border text-left transition-all"
                   style={{ borderColor: "var(--wine-light)", background: "rgba(255,255,255,0.7)", backdropFilter: "blur(8px)" }}
                 >
                   <span className="text-2xl mb-2">📸</span>
-                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>认识一瓶酒</span>
-                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>拍照识酒，了解详情</span>
+                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>{t(locale, "scene3Title")}</span>
+                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>{t(locale, "scene3Desc")}</span>
                 </button>
 
-                {/* 品酒记录 */}
+                {/* Scene 4: Tasting */}
                 <button
-                  onClick={() => sendMessage("我正在品酒，想让你引导我做一次专业的品鉴体验。请一步一步带我从外观、香气、口感到余味来品评。")}
+                  onClick={() => startScenario(t(locale, "scene4Msg"))}
                   className="scenario-card quick-btn-animate stagger-4 flex flex-col items-start p-4 rounded-2xl border text-left transition-all"
                   style={{ borderColor: "var(--wine-light)", background: "rgba(255,255,255,0.7)", backdropFilter: "blur(8px)" }}
                 >
                   <span className="text-2xl mb-2">🍷</span>
-                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>品酒记录</span>
-                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>AI引导品鉴，边喝边记</span>
+                  <span className="text-sm font-semibold mb-0.5" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-deep)" }}>{t(locale, "scene4Title")}</span>
+                  <span className="text-xs leading-relaxed" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)" }}>{t(locale, "scene4Desc")}</span>
                 </button>
               </div>
 
               {/* Divider */}
               <div className="wine-divider mt-4">
-                <span className="text-xs px-3 whitespace-nowrap" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)", opacity: 0.6 }}>或直接提问</span>
+                <span className="text-xs px-3 whitespace-nowrap" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)", opacity: 0.6 }}>{t(locale, "orAsk")}</span>
               </div>
 
               {/* Quick questions */}
               <div className="flex flex-wrap gap-2 justify-center">
-                {["推荐入门红酒", "牛排配什么酒", "波尔多产区介绍", "今天喝什么"].map((q, idx) => (
+                {[t(locale, "quick1"), t(locale, "quick2"), t(locale, "quick3"), t(locale, "quick4")].map((q, idx) => (
                   <button
                     key={q}
                     onClick={() => sendMessage(q)}
@@ -1469,7 +1566,7 @@ export default function Home() {
         )}
 
         {/* Chat messages */}
-        {messages.map((msg, i) => (
+        {messages.filter(m => !m.hidden).map((msg, i) => (
           <div
             key={i}
             className={`message-enter flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
@@ -1483,8 +1580,8 @@ export default function Home() {
               style={{
                 fontFamily: "'Noto Serif SC', serif",
                 ...(msg.role === "user"
-                  ? { background: "linear-gradient(135deg, var(--wine-deep), var(--wine-medium))", boxShadow: "0 2px 8px rgba(114, 47, 55, 0.2)" }
-                  : { backgroundColor: "white", borderColor: msg.isError ? "var(--wine-medium)" : "var(--wine-light)", color: "var(--wine-text)", boxShadow: "0 1px 4px rgba(114, 47, 55, 0.06)" }),
+                  ? { background: "linear-gradient(135deg, var(--wine-deep), var(--wine-medium))", boxShadow: "0 2px 8px rgba(139, 34, 82, 0.2)" }
+                  : { backgroundColor: "var(--wine-card, #FFFFFF)", borderColor: msg.isError ? "var(--wine-error)" : "var(--wine-border)", color: "#3D3A42", boxShadow: "0 1px 4px rgba(30, 26, 43, 0.06)" }),
               }}
             >
               {msg.role === "assistant" ? (
@@ -1521,7 +1618,7 @@ export default function Home() {
         {isLoading && streamingContent && (
           <div className="message-enter flex gap-3 justify-start">
             <div className="ai-avatar-pulse flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm mt-1" style={{ backgroundColor: "var(--wine-deep)", color: "white" }}>🍷</div>
-            <div className="msg-bubble max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed border cursor-blink" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "white", borderColor: "var(--wine-light)", color: "var(--wine-text)", boxShadow: "0 1px 4px rgba(114, 47, 55, 0.06)" }}>
+            <div className="msg-bubble max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed border cursor-blink" style={{ fontFamily: "'Noto Serif SC', serif", backgroundColor: "var(--wine-card, #FFFFFF)", borderColor: "var(--wine-border)", color: "#3D3A42", boxShadow: "0 1px 4px rgba(30, 26, 43, 0.06)" }}>
               <MarkdownContent content={streamingContent} isStreaming={true} />
             </div>
           </div>
@@ -1556,8 +1653,8 @@ export default function Home() {
       {lightboxImage && <ImageLightbox src={lightboxImage} onClose={() => setLightboxImage(null)} />}
 
       {/* Hidden file inputs */}
-      <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileInputChange} className="hidden" />
-      <input ref={galleryInputRef} type="file" accept="image/*" onChange={handleFileInputChange} className="hidden" />
+      <input ref={cameraInputRef} type="file" accept="image/*,.heic,.heif" capture="environment" onChange={handleFileInputChange} className="hidden" />
+      <input ref={galleryInputRef} type="file" accept="image/*,.heic,.heif" onChange={handleFileInputChange} className="hidden" />
 
       {/* Input Area */}
       <div className="footer-decorated px-4 py-4" style={{ paddingBottom: "calc(1.5rem + var(--safe-bottom))" }}>
@@ -1587,7 +1684,7 @@ export default function Home() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={pendingImage ? "添加说明（可选）" : "请问您想了解哪方面的葡萄酒知识？"}
+            placeholder={pendingImage ? t(locale, "placeholderImg") : t(locale, "placeholder")}
             rows={1}
             className="flex-1 resize-none outline-none bg-transparent text-sm leading-relaxed sm:text-sm text-base"
             style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-text)", fontSize: "16px" }}
@@ -1605,7 +1702,7 @@ export default function Home() {
         </div>
         <div className="mt-3 flex items-center justify-center gap-2">
           <div className="h-px flex-1 max-w-[60px]" style={{ background: "linear-gradient(90deg, transparent, var(--wine-accent))" }} />
-          <p className="text-xs text-center" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)", opacity: 0.45 }}>瑞莫科技 · Raymo Tech © 2026</p>
+          <p className="text-xs text-center" style={{ fontFamily: "'Noto Serif SC', serif", color: "var(--wine-accent)", opacity: 0.45 }}>{t(locale, "footer")}</p>
           <div className="h-px flex-1 max-w-[60px]" style={{ background: "linear-gradient(90deg, var(--wine-accent), transparent)" }} />
         </div>
       </div>

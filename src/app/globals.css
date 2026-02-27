@@ -1,15 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --wine-deep: #722F37;
-  --wine-medium: #8B4557;
-  --wine-light: #C9A0A0;
-  --wine-cream: #FAF5F0;
-  --wine-gold: #C4A35A;
-  --wine-dark: #1A0A0E;
-  --wine-text: #2D1B20;
-  --wine-accent: #D4A574;
-  --wine-gold-warm: #C9A96E;
+  /* Sommé 颂美 Brand Colors */
+  --wine-deep: #8B2252;
+  --wine-medium: #A83A6A;
+  --wine-light: #C75B8E;
+  --wine-cream: #FAF7F2;
+  --wine-gold: #D4A56A;
+  --wine-dark: #1E1A2B;
+  --wine-text: #3D3A42;
+  --wine-accent: #D4A56A;
+  --wine-gold-warm: #D4A56A;
+  --wine-green: #5B8C5A;
+  --wine-secondary-text: #8A8690;
+  --wine-border: #E8E5E0;
+  --wine-card: #FFFFFF;
+  --wine-success: #3A9B7A;
+  --wine-error: #D94F4F;
+  --wine-warning: #E8B84B;
+  --wine-info: #5B8FB9;
+  /* Gradients */
+  --gradient-tasting: linear-gradient(135deg, #8B2252 0%, #D4A56A 100%);
+  --gradient-evening: linear-gradient(180deg, #4A1942 0%, #1E1A2B 100%);
   /* iOS safe area */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -20,8 +32,25 @@
 body {
   background: var(--wine-cream);
   color: var(--wine-text);
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-text-size-adjust: 100%;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wine-deep: #C75B8E;
+    --wine-medium: #A83A6A;
+    --wine-cream: #1E1A2B;
+    --wine-dark: #14111E;
+    --wine-text: #F0EDE8;
+    --wine-secondary-text: #6B6774;
+    --wine-border: #3A3548;
+    --wine-card: #2A2636;
+    --wine-gold: #E0BA80;
+    --wine-accent: #E0BA80;
+    --wine-gold-warm: #E0BA80;
+  }
 }
 
 /* ═══ Custom scrollbar — thin, wine-themed ═══ */

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Wine glass + chat bubble favicon for Sommé -->
+  <!-- Chat bubble body -->
+  <rect x="8" y="4" width="48" height="32" rx="12" fill="#8B2252"/>
+  <!-- Chat bubble tail -->
+  <path d="M20 36 L16 44 L28 36" fill="#8B2252"/>
+  <!-- Three dots (AI thinking) -->
+  <circle cx="24" cy="20" r="3.5" fill="#D4A56A"/>
+  <circle cx="36" cy="20" r="3.5" fill="#D4A56A" opacity="0.7"/>
+  <circle cx="48" cy="20" r="3.5" fill="#D4A56A" opacity="0.4"/>
+  <!-- Wine glass stem -->
+  <line x1="32" y1="44" x2="32" y2="54" stroke="#8B2252" stroke-width="3" stroke-linecap="round"/>
+  <!-- Wine glass base -->
+  <line x1="24" y1="56" x2="40" y2="56" stroke="#8B2252" stroke-width="3" stroke-linecap="round"/>
+</svg>
