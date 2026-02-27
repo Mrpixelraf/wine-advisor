@@ -6,7 +6,7 @@ import type { Message, MessageAction, WineEntry, TasteProfile, WineTags, SceneTy
 import { STORAGE_KEY, ONBOARDING_KEY } from "@/lib/types";
 import { loadMessages, saveMessages, loadTasteProfile, saveTasteProfile, loadCellar, saveCellar } from "@/lib/storage";
 import { extractTasteFromText } from "@/lib/taste-extraction";
-import { detectWineActions, detectBuyModeActions, detectDrinkModeActions, extractWineNameFromMessages, extractWineImageFromMessages } from "@/lib/wine-detection";
+import { detectWineActions, detectBuyModeActions, detectDrinkModeActions, detectTastingSceneActions, extractWineNameFromMessages, extractWineImageFromMessages } from "@/lib/wine-detection";
 
 import SceneSelector from "@/components/SceneSelector";
 import Chat from "@/components/Chat";
@@ -19,6 +19,7 @@ const CellarPage = lazy(() => import("@/components/WineCellar"));
 const RatingModal = lazy(() => import("@/components/RatingModal"));
 const OnboardingTour = lazy(() => import("@/components/OnboardingTour"));
 const ImageLightbox = lazy(() => import("@/components/ImageWidgets").then(m => ({ default: m.ImageLightbox })));
+const GuidedTasting = lazy(() => import("@/components/GuidedTasting"));
 
 /* ─── Compress image to small thumbnail for cellar storage ─── */
 function compressToThumbnail(base64: string): Promise<string> {
@@ -101,6 +102,11 @@ export default function Home() {
   const [activeScene, setActiveScene] = useState<SceneType>(null);
   const [actionSheetOpen, setActionSheetOpen] = useState(false);
   const [browsingHome, setBrowsingHome] = useState(false);
+
+  // v0.7: guided tasting state
+  const [guidedTasting, setGuidedTasting] = useState(false);
+  const [tastingWineName, setTastingWineName] = useState("");
+  const [tastingWineImage, setTastingWineImage] = useState<string | undefined>(undefined);
 
   /* ── Refs ── */
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -229,9 +235,13 @@ export default function Home() {
       }
 
       if (fullContent) {
+        // Detect actions for scenario responses too
+        let detectedActions: MessageAction[] | undefined;
+        detectedActions = detectTastingSceneActions(fullContent, hiddenPrompt, locale);
+
         const scenarioMessages: Message[] = [
           { role: "user", content: hiddenPrompt, hidden: true },
-          { role: "assistant", content: fullContent },
+          { role: "assistant", content: fullContent, ...(detectedActions ? { actions: detectedActions } : {}) },
         ];
         setMessages(scenarioMessages);
       }
@@ -327,6 +337,7 @@ export default function Home() {
       detectedActions = detectWineActions(fullContent, hadImage, locale);
       if (!detectedActions) detectedActions = detectBuyModeActions(fullContent, lastUMsg, locale);
       if (!detectedActions) detectedActions = detectDrinkModeActions(fullContent, lastUMsg, locale);
+      if (!detectedActions) detectedActions = detectTastingSceneActions(fullContent, lastUMsg, locale);
 
       const assistantMsg: Message = {
         role: "assistant",
@@ -358,6 +369,15 @@ export default function Home() {
       updated[msgIndex] = msg;
       return updated;
     });
+
+    if (action.action === "start-guided-tasting") {
+      const wineName = extractWineNameFromMessages(messages, locale);
+      const wineImage = extractWineImageFromMessages(messages);
+      setTastingWineName(wineName);
+      setTastingWineImage(wineImage);
+      setGuidedTasting(true);
+      return;
+    }
 
     if (action.message) {
       await sendMessage(action.message);
@@ -531,6 +551,27 @@ export default function Home() {
           onClose={() => { setShowRatingModal(false); setRatingData(null); }}
           locale={locale}
         />
+        </Suspense>
+      )}
+
+      {/* Guided Tasting (lazy, v0.7) */}
+      {guidedTasting && (
+        <Suspense fallback={null}>
+          <div className="fixed inset-0 z-40" style={{ backgroundColor: "var(--wine-cream)" }}>
+            <div className="flex flex-col max-w-3xl mx-auto h-full" style={{ paddingTop: "var(--safe-top)", paddingLeft: "var(--safe-left)", paddingRight: "var(--safe-right)" }}>
+              <GuidedTasting
+                locale={locale}
+                wineName={tastingWineName}
+                wineImage={tastingWineImage}
+                onComplete={(entry) => {
+                  setCellar((prev) => [...prev, entry]);
+                  setGuidedTasting(false);
+                  setToast(t(locale, "savedCellar"));
+                }}
+                onExit={() => setGuidedTasting(false)}
+              />
+            </div>
+          </div>
         </Suspense>
       )}
 

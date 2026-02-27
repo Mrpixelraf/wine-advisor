@@ -74,6 +74,42 @@ export function detectDrinkModeActions(
       action: "rate-wine",
       data: { type: "drinking", aiNotes: aiContent },
     },
+    {
+      id: "guided-tasting-" + Date.now(),
+      label: t(locale, "startGuidedTasting"),
+      icon: "🍷",
+      action: "start-guided-tasting",
+    },
+  ];
+}
+
+/** Detect tasting scenario actions (when AI responds in tasting mode) */
+export function detectTastingSceneActions(
+  aiContent: string,
+  userMessage: string,
+  locale: Locale
+): MessageAction[] | undefined {
+  // Trigger on tasting scene prompts
+  const tastingPrompts = [
+    "品酒", "品鉴", "引导", "一步一步", "品评",
+    "tasting", "guide", "step by step", "appearance", "aroma",
+  ];
+  const isTastingContext = tastingPrompts.some((k) =>
+    userMessage.toLowerCase().includes(k.toLowerCase())
+  );
+  if (!isTastingContext) return undefined;
+
+  // Check if AI response looks like a tasting guide
+  const guideKeywords = ["外观", "香气", "口感", "余味", "Appearance", "Nose", "Palate", "Finish", "Step"];
+  if (!guideKeywords.some((k) => aiContent.includes(k))) return undefined;
+
+  return [
+    {
+      id: "start-guided-" + Date.now(),
+      label: t(locale, "startGuidedTasting"),
+      icon: "🍷",
+      action: "start-guided-tasting",
+    },
   ];
 }
 

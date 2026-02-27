@@ -181,8 +181,161 @@ export interface OnboardingStep {
   btnText: { zh: string; en: string };
 }
 
+/* ─── Guided Tasting Types ─── */
+export type TastingLevel = "beginner" | "intermediate" | "expert";
+
+export interface TastingStep {
+  key: "appearance" | "aroma" | "palate" | "finish";
+  emoji: string;
+  labelKey: string;
+}
+
+export const TASTING_STEPS: TastingStep[] = [
+  { key: "appearance", emoji: "👁️", labelKey: "stepAppearance" },
+  { key: "aroma", emoji: "👃", labelKey: "stepAroma" },
+  { key: "palate", emoji: "👅", labelKey: "stepPalate" },
+  { key: "finish", emoji: "✨", labelKey: "stepFinish" },
+];
+
+export interface GuidedTastingData {
+  wineName: string;
+  wineImage?: string;
+  level: TastingLevel;
+  appearance: {
+    color: string[];
+    clarity: string[];
+  };
+  aroma: {
+    primary: string[];
+    secondary: string[];
+    intensity: number; // 1-5
+  };
+  palate: {
+    acidity: number; // 1-5
+    tannin: number; // 1-5
+    body: number; // 1-5
+    texture: string[];
+    sweetness: string;
+  };
+  finish: {
+    length: string;
+    descriptors: string[];
+    overallScore: number; // 1-100
+  };
+}
+
+/* ─── Guided Tasting Tag Definitions ─── */
+export const APPEARANCE_COLORS = [
+  { zh: "浅金色", en: "Light Gold" },
+  { zh: "金黄", en: "Golden" },
+  { zh: "琥珀", en: "Amber" },
+  { zh: "浅红", en: "Light Red" },
+  { zh: "宝石红", en: "Ruby" },
+  { zh: "深紫红", en: "Deep Purple" },
+  { zh: "棕红", en: "Tawny" },
+];
+
+export const APPEARANCE_CLARITY = [
+  { zh: "清澈", en: "Clear" },
+  { zh: "微浑", en: "Slightly Hazy" },
+  { zh: "明亮", en: "Brilliant" },
+];
+
+export interface AromaCategoryDef {
+  key: string;
+  emoji: string;
+  label: { zh: string; en: string };
+  secondary: { zh: string; en: string }[];
+}
+
+export const AROMA_CATEGORIES: AromaCategoryDef[] = [
+  {
+    key: "fruit", emoji: "🍎",
+    label: { zh: "果香", en: "Fruity" },
+    secondary: [
+      { zh: "樱桃", en: "Cherry" }, { zh: "黑莓", en: "Blackberry" },
+      { zh: "李子", en: "Plum" }, { zh: "柑橘", en: "Citrus" },
+      { zh: "蓝莓", en: "Blueberry" }, { zh: "苹果", en: "Apple" },
+      { zh: "桃子", en: "Peach" },
+    ],
+  },
+  {
+    key: "floral", emoji: "🌸",
+    label: { zh: "花香", en: "Floral" },
+    secondary: [
+      { zh: "玫瑰", en: "Rose" }, { zh: "紫罗兰", en: "Violet" },
+      { zh: "茉莉", en: "Jasmine" }, { zh: "橙花", en: "Orange Blossom" },
+    ],
+  },
+  {
+    key: "herbal", emoji: "🌿",
+    label: { zh: "草本", en: "Herbal" },
+    secondary: [
+      { zh: "薄荷", en: "Mint" }, { zh: "百里香", en: "Thyme" },
+      { zh: "青椒", en: "Green Pepper" }, { zh: "烟草", en: "Tobacco" },
+    ],
+  },
+  {
+    key: "toast", emoji: "🍞",
+    label: { zh: "烘烤", en: "Toasty" },
+    secondary: [
+      { zh: "橡木", en: "Oak" }, { zh: "香草", en: "Vanilla" },
+      { zh: "咖啡", en: "Coffee" }, { zh: "巧克力", en: "Chocolate" },
+      { zh: "烤面包", en: "Toast" },
+    ],
+  },
+  {
+    key: "mineral", emoji: "💎",
+    label: { zh: "矿物", en: "Mineral" },
+    secondary: [
+      { zh: "石灰", en: "Limestone" }, { zh: "燧石", en: "Flint" },
+      { zh: "潮湿泥土", en: "Wet Earth" },
+    ],
+  },
+  {
+    key: "honey", emoji: "🍯",
+    label: { zh: "蜂蜜", en: "Honey" },
+    secondary: [
+      { zh: "蜂蜜", en: "Honey" }, { zh: "焦糖", en: "Caramel" },
+      { zh: "杏仁", en: "Almond" },
+    ],
+  },
+];
+
+export const PALATE_TEXTURES = [
+  { zh: "丝滑", en: "Silky" },
+  { zh: "紧实", en: "Firm" },
+  { zh: "多汁", en: "Juicy" },
+  { zh: "圆润", en: "Round" },
+  { zh: "粗糙", en: "Coarse" },
+  { zh: "清爽", en: "Crisp" },
+  { zh: "油润", en: "Oily" },
+];
+
+export const PALATE_SWEETNESS = [
+  { zh: "干型", en: "Dry" },
+  { zh: "微甜", en: "Off-dry" },
+  { zh: "甜", en: "Sweet" },
+];
+
+export const FINISH_LENGTHS = [
+  { zh: "短(<3秒)", en: "Short (<3s)" },
+  { zh: "中(3-8秒)", en: "Medium (3-8s)" },
+  { zh: "长(>8秒)", en: "Long (>8s)" },
+];
+
+export const FINISH_DESCRIPTORS = [
+  { zh: "愉悦", en: "Pleasant" },
+  { zh: "复杂", en: "Complex" },
+  { zh: "简单", en: "Simple" },
+  { zh: "回甘", en: "Sweet Return" },
+  { zh: "苦涩", en: "Bitter" },
+  { zh: "温暖", en: "Warm" },
+];
+
 /* ─── Storage Keys ─── */
 export const STORAGE_KEY = "wine-advisor-messages";
 export const TASTE_PROFILE_KEY = "wine-advisor-taste-profile";
 export const CELLAR_KEY = "wineCellar";
 export const ONBOARDING_KEY = "wine-advisor-onboarded";
+export const TASTING_LEVEL_KEY = "somme-tasting-level";
