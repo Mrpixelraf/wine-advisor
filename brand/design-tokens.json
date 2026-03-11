@@ -1,0 +1,420 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "meta": {
+    "brand": "Sommé / 颂美",
+    "version": "1.0.0",
+    "date": "2026-02-27",
+    "description": "Design Token System for Sommé — Your Personal Sommelier"
+  },
+
+  "color": {
+    "primitive": {
+      "burgundy": {
+        "50":  { "value": "#FCF2F6", "type": "color", "description": "Lightest tint / 最浅色阶" },
+        "100": { "value": "#F5D6E3", "type": "color", "description": "Light tint / 浅色阶" },
+        "200": { "value": "#E5A3C0", "type": "color", "description": "Light / 浅" },
+        "300": { "value": "#C75B8E", "type": "color", "description": "Medium light / 中浅 (dark mode primary)" },
+        "400": { "value": "#A83A6A", "type": "color", "description": "Medium / 中" },
+        "500": { "value": "#8B2252", "type": "color", "description": "Base — Sommé Burgundy / 颂美酒红 ★" },
+        "600": { "value": "#721B43", "type": "color", "description": "Dark / 深" },
+        "700": { "value": "#5A1535", "type": "color", "description": "Darker / 更深" },
+        "800": { "value": "#421027", "type": "color", "description": "Darkest / 最深" },
+        "900": { "value": "#2A0A19", "type": "color", "description": "Near black / 近黑" }
+      },
+      "gold": {
+        "50":  { "value": "#FDF8F0", "type": "color" },
+        "100": { "value": "#F8ECDA", "type": "color" },
+        "200": { "value": "#F0D8B4", "type": "color" },
+        "300": { "value": "#E0BA80", "type": "color", "description": "Dark mode amber / 深色模式琥珀金" },
+        "400": { "value": "#D4A56A", "type": "color", "description": "Base — Amber Gold / 琥珀金 ★" },
+        "500": { "value": "#C4944E", "type": "color" },
+        "600": { "value": "#A87A3A", "type": "color" },
+        "700": { "value": "#8A622C", "type": "color" },
+        "800": { "value": "#6C4C20", "type": "color" },
+        "900": { "value": "#4E3614", "type": "color" }
+      },
+      "green": {
+        "50":  { "value": "#F2F7F2", "type": "color" },
+        "100": { "value": "#DDEADD", "type": "color" },
+        "200": { "value": "#B4D4B3", "type": "color" },
+        "300": { "value": "#7DB07C", "type": "color" },
+        "400": { "value": "#5B8C5A", "type": "color", "description": "Base — Vineyard Green / 葡园绿 ★" },
+        "500": { "value": "#4A7349", "type": "color" },
+        "600": { "value": "#3A5B39", "type": "color" },
+        "700": { "value": "#2B442B", "type": "color" },
+        "800": { "value": "#1D2E1D", "type": "color" },
+        "900": { "value": "#0F180F", "type": "color" }
+      },
+      "neutral": {
+        "0":   { "value": "#FFFFFF", "type": "color", "description": "Pure White / 纯白" },
+        "50":  { "value": "#FAF7F2", "type": "color", "description": "Ivory — Sommé Ivory / 颂美象牙白 ★" },
+        "100": { "value": "#F0EDE8", "type": "color", "description": "Light gray warm / 暖浅灰" },
+        "150": { "value": "#E8E5E0", "type": "color", "description": "Border light / 浅边框" },
+        "200": { "value": "#D8D4CE", "type": "color" },
+        "300": { "value": "#B8B4AE", "type": "color" },
+        "400": { "value": "#8A8690", "type": "color", "description": "Secondary text / 次要文字 ★" },
+        "500": { "value": "#6B6774", "type": "color", "description": "Dark mode secondary text" },
+        "600": { "value": "#3D3A42", "type": "color", "description": "Body text / 正文灰 ★" },
+        "700": { "value": "#2A2636", "type": "color", "description": "Dark mode card / 深色模式卡片" },
+        "800": { "value": "#1E1A2B", "type": "color", "description": "Midnight Deep — 夜幕深 ★" },
+        "900": { "value": "#14111E", "type": "color", "description": "Deepest / 至暗" }
+      }
+    },
+
+    "semantic": {
+      "light": {
+        "bg": {
+          "primary":   { "value": "{color.primitive.neutral.50}",  "description": "主背景 / Primary background — #FAF7F2" },
+          "secondary": { "value": "{color.primitive.neutral.0}",   "description": "卡片/模块背景 / Card background — #FFFFFF" },
+          "tertiary":  { "value": "{color.primitive.neutral.100}", "description": "次级区域 / Tertiary area — #F0EDE8" },
+          "elevated":  { "value": "{color.primitive.neutral.0}",   "description": "浮层/弹窗 / Elevated surface — #FFFFFF" },
+          "brand":     { "value": "#F9F0F4",                       "description": "品牌浅色底 / Brand tint bg" },
+          "inverse":   { "value": "{color.primitive.neutral.800}", "description": "反色背景 / Inverse bg — #1E1A2B" }
+        },
+        "text": {
+          "primary":     { "value": "{color.primitive.neutral.600}", "description": "主文字 / Primary text — #3D3A42" },
+          "secondary":   { "value": "{color.primitive.neutral.400}", "description": "次要文字 / Secondary text — #8A8690" },
+          "tertiary":    { "value": "{color.primitive.neutral.300}", "description": "占位符 / Placeholder — #B8B4AE" },
+          "brand":       { "value": "{color.primitive.burgundy.500}", "description": "品牌色文字 / Brand text — #8B2252" },
+          "onBrand":     { "value": "#FFFFFF",                      "description": "品牌色上的文字 / Text on brand" },
+          "inverse":     { "value": "{color.primitive.neutral.100}", "description": "反色文字 / Inverse text — #F0EDE8" },
+          "link":        { "value": "{color.primitive.burgundy.500}", "description": "链接 / Link — #8B2252" }
+        },
+        "border": {
+          "default":   { "value": "{color.primitive.neutral.150}", "description": "默认边框 / Default border — #E8E5E0" },
+          "strong":    { "value": "{color.primitive.neutral.200}", "description": "强调边框 / Strong border — #D8D4CE" },
+          "brand":     { "value": "{color.primitive.burgundy.500}", "description": "品牌边框 / Brand border — #8B2252" },
+          "focus":     { "value": "#B85D89",                       "description": "聚焦边框 / Focus ring" }
+        },
+        "icon": {
+          "default":   { "value": "{color.primitive.neutral.600}", "description": "默认图标 / Default icon — #3D3A42" },
+          "secondary": { "value": "{color.primitive.neutral.400}", "description": "次要图标 / Secondary icon — #8A8690" },
+          "brand":     { "value": "{color.primitive.burgundy.500}", "description": "品牌图标/选中态 / Active icon — #8B2252" }
+        },
+        "interactive": {
+          "primary":          { "value": "{color.primitive.burgundy.500}", "description": "主交互色 — #8B2252" },
+          "primaryHover":     { "value": "{color.primitive.burgundy.600}", "description": "主交互悬停 — #721B43" },
+          "primaryActive":    { "value": "{color.primitive.burgundy.700}", "description": "主交互按下 — #5A1535" },
+          "primaryDisabled":  { "value": "{color.primitive.neutral.150}", "description": "禁用 — #E8E5E0" },
+          "secondary":        { "value": "transparent",                   "description": "次级交互" },
+          "secondaryHover":   { "value": "#FCF2F6",                       "description": "次级悬停" },
+          "secondaryActive":  { "value": "#F5D6E3",                       "description": "次级按下" }
+        },
+        "status": {
+          "success":       { "value": "#3A9B7A", "description": "成功 / Success — RGB(58,155,122)" },
+          "successBg":     { "value": "#EDF7F3", "description": "成功背景" },
+          "error":         { "value": "#D94F4F", "description": "错误 / Error — RGB(217,79,79)" },
+          "errorBg":       { "value": "#FDF0F0", "description": "错误背景" },
+          "warning":       { "value": "#E8B84B", "description": "警告 / Warning — RGB(232,184,75)" },
+          "warningBg":     { "value": "#FDF8EC", "description": "警告背景" },
+          "info":          { "value": "#5B8FB9", "description": "信息 / Info — RGB(91,143,185)" },
+          "infoBg":        { "value": "#EFF4F9", "description": "信息背景" }
+        },
+        "accent": {
+          "gold":     { "value": "{color.primitive.gold.400}",  "description": "琥珀金 — #D4A56A" },
+          "green":    { "value": "{color.primitive.green.400}", "description": "葡园绿 — #5B8C5A" }
+        },
+        "gradient": {
+          "tasting":    { "value": "linear-gradient(135deg, #8B2252 0%, #D4A56A 100%)", "description": "品鉴渐变 / Tasting gradient" },
+          "evening":    { "value": "linear-gradient(180deg, #4A1942 0%, #1E1A2B 100%)", "description": "夜酒渐变 / Evening pour" },
+          "brandSoft":  { "value": "linear-gradient(135deg, #8B2252 0%, #C75B8E 100%)", "description": "品牌柔和渐变" },
+          "goldShimmer":{ "value": "linear-gradient(135deg, #D4A56A 0%, #E8D4A8 50%, #D4A56A 100%)", "description": "金色微光" }
+        },
+        "chat": {
+          "userBubbleBg":       { "value": "{color.primitive.neutral.50}",  "description": "用户气泡背景 — #FAF7F2" },
+          "userBubbleBorder":   { "value": "{color.primitive.burgundy.200}", "description": "用户气泡边框 — #E5A3C0" },
+          "aiBubbleBg":         { "value": "rgba(139, 34, 82, 0.06)",       "description": "AI 气泡背景" },
+          "systemBubbleBg":     { "value": "{color.primitive.neutral.100}", "description": "系统消息背景 — #F0EDE8" }
+        }
+      },
+
+      "dark": {
+        "bg": {
+          "primary":   { "value": "{color.primitive.neutral.800}", "description": "主背景 — #1E1A2B" },
+          "secondary": { "value": "{color.primitive.neutral.700}", "description": "卡片背景 — #2A2636" },
+          "tertiary":  { "value": "#332E40",                       "description": "次级区域" },
+          "elevated":  { "value": "#3A3548",                       "description": "浮层 / Elevated" },
+          "brand":     { "value": "#2D1A28",                       "description": "品牌深色底" },
+          "inverse":   { "value": "{color.primitive.neutral.50}",  "description": "反色背景 — #FAF7F2" }
+        },
+        "text": {
+          "primary":     { "value": "{color.primitive.neutral.100}", "description": "主文字 — #F0EDE8" },
+          "secondary":   { "value": "{color.primitive.neutral.500}", "description": "次要文字 — #6B6774" },
+          "tertiary":    { "value": "#524E5E",                       "description": "占位符" },
+          "brand":       { "value": "{color.primitive.burgundy.300}", "description": "品牌色文字 — #C75B8E" },
+          "onBrand":     { "value": "#FFFFFF",                       "description": "品牌色上文字" },
+          "inverse":     { "value": "{color.primitive.neutral.600}", "description": "反色文字 — #3D3A42" },
+          "link":        { "value": "{color.primitive.burgundy.300}", "description": "链接 — #C75B8E" }
+        },
+        "border": {
+          "default":   { "value": "#3A3548",  "description": "默认边框" },
+          "strong":    { "value": "#4A455A",  "description": "强调边框" },
+          "brand":     { "value": "{color.primitive.burgundy.300}", "description": "品牌边框 — #C75B8E" },
+          "focus":     { "value": "#C75B8E",  "description": "聚焦边框" }
+        },
+        "icon": {
+          "default":   { "value": "{color.primitive.neutral.100}", "description": "默认图标 — #F0EDE8" },
+          "secondary": { "value": "{color.primitive.neutral.500}", "description": "次要图标 — #6B6774" },
+          "brand":     { "value": "{color.primitive.burgundy.300}", "description": "品牌图标 — #C75B8E" }
+        },
+        "interactive": {
+          "primary":          { "value": "{color.primitive.burgundy.300}", "description": "主交互色 — #C75B8E" },
+          "primaryHover":     { "value": "{color.primitive.burgundy.200}", "description": "悬停 — #E5A3C0" },
+          "primaryActive":    { "value": "{color.primitive.burgundy.400}", "description": "按下 — #A83A6A" },
+          "primaryDisabled":  { "value": "#3A3548",                       "description": "禁用" },
+          "secondary":        { "value": "transparent",                    "description": "次级" },
+          "secondaryHover":   { "value": "#2D1A28",                        "description": "次级悬停" },
+          "secondaryActive":  { "value": "#421027",                        "description": "次级按下" }
+        },
+        "status": {
+          "success":       { "value": "#4DB893", "description": "成功（提亮）" },
+          "successBg":     { "value": "#1A2B24", "description": "成功背景" },
+          "error":         { "value": "#E87070", "description": "错误（提亮）" },
+          "errorBg":       { "value": "#2B1A1A", "description": "错误背景" },
+          "warning":       { "value": "#F0C860", "description": "警告（提亮）" },
+          "warningBg":     { "value": "#2B261A", "description": "警告背景" },
+          "info":          { "value": "#7AAAD0", "description": "信息（提亮）" },
+          "infoBg":        { "value": "#1A222B", "description": "信息背景" }
+        },
+        "accent": {
+          "gold":     { "value": "{color.primitive.gold.300}",  "description": "琥珀金（提亮） — #E0BA80" },
+          "green":    { "value": "{color.primitive.green.300}", "description": "葡园绿（提亮） — #7DB07C" }
+        },
+        "gradient": {
+          "tasting":    { "value": "linear-gradient(135deg, #C75B8E 0%, #E0BA80 100%)", "description": "品鉴渐变（深色）" },
+          "evening":    { "value": "linear-gradient(180deg, #3A1835 0%, #14111E 100%)", "description": "夜酒渐变（深色）" },
+          "brandSoft":  { "value": "linear-gradient(135deg, #A83A6A 0%, #C75B8E 100%)", "description": "品牌柔和渐变" },
+          "goldShimmer":{ "value": "linear-gradient(135deg, #E0BA80 0%, #F0D8B4 50%, #E0BA80 100%)", "description": "金色微光" }
+        },
+        "chat": {
+          "userBubbleBg":       { "value": "#332E40",                "description": "用户气泡背景" },
+          "userBubbleBorder":   { "value": "#5A1535",                "description": "用户气泡边框" },
+          "aiBubbleBg":         { "value": "rgba(199, 91, 142, 0.10)", "description": "AI 气泡背景" },
+          "systemBubbleBg":     { "value": "#2A2636",                "description": "系统消息背景" }
+        }
+      }
+    }
+  },
+
+  "typography": {
+    "fontFamily": {
+      "displayEn":   { "value": "'DM Serif Display', Georgia, 'Times New Roman', serif",       "description": "英文标题 / English display" },
+      "bodyEn":      { "value": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", "description": "英文正文 / English body" },
+      "dataEn":      { "value": "'JetBrains Mono', 'SF Mono', 'Fira Code', monospace",         "description": "数据字体 / Data & numbers" },
+      "displayCn":   { "value": "'Noto Serif CJK SC', '思源宋体', 'Source Han Serif SC', 'Songti SC', serif", "description": "中文标题 / Chinese display" },
+      "bodyCn":      { "value": "'Noto Sans CJK SC', '思源黑体', 'Source Han Sans SC', 'PingFang SC', 'HarmonyOS Sans SC', sans-serif", "description": "中文正文 / Chinese body" }
+    },
+    "scale": {
+      "h1": {
+        "fontSize":      { "value": "28px",  "description": "大标题 / Display heading" },
+        "lineHeight":    { "value": "36px",  "description": "行高" },
+        "fontWeight":    { "value": "700",   "description": "Bold" },
+        "letterSpacing": { "value": "-0.02em", "description": "字间距" },
+        "fontFamilyEn":  { "value": "{typography.fontFamily.displayEn}" },
+        "fontFamilyCn":  { "value": "{typography.fontFamily.displayCn}" }
+      },
+      "h2": {
+        "fontSize":      { "value": "22px" },
+        "lineHeight":    { "value": "30px" },
+        "fontWeight":    { "value": "500",   "description": "Medium" },
+        "letterSpacing": { "value": "-0.01em" },
+        "fontFamilyEn":  { "value": "{typography.fontFamily.displayEn}" },
+        "fontFamilyCn":  { "value": "{typography.fontFamily.displayCn}" }
+      },
+      "h3": {
+        "fontSize":      { "value": "18px" },
+        "lineHeight":    { "value": "26px" },
+        "fontWeight":    { "value": "600",   "description": "SemiBold" },
+        "letterSpacing": { "value": "0em" },
+        "fontFamilyEn":  { "value": "{typography.fontFamily.bodyEn}" },
+        "fontFamilyCn":  { "value": "{typography.fontFamily.bodyCn}" }
+      },
+      "body": {
+        "fontSize":      { "value": "16px" },
+        "lineHeight":    { "value": "24px" },
+        "fontWeight":    { "value": "400",   "description": "Regular" },
+        "letterSpacing": { "value": "0em" },
+        "fontFamilyEn":  { "value": "{typography.fontFamily.bodyEn}" },
+        "fontFamilyCn":  { "value": "{typography.fontFamily.bodyCn}" }
+      },
+      "bodySmall": {
+        "fontSize":      { "value": "14px" },
+        "lineHeight":    { "value": "20px" },
+        "fontWeight":    { "value": "400" },
+        "letterSpacing": { "value": "0.01em" },
+        "fontFamilyEn":  { "value": "{typography.fontFamily.bodyEn}" },
+        "fontFamilyCn":  { "value": "{typography.fontFamily.bodyCn}" }
+      },
+      "caption": {
+        "fontSize":      { "value": "12px" },
+        "lineHeight":    { "value": "16px" },
+        "fontWeight":    { "value": "400" },
+        "letterSpacing": { "value": "0.02em" },
+        "fontFamilyEn":  { "value": "{typography.fontFamily.bodyEn}" },
+        "fontFamilyCn":  { "value": "{typography.fontFamily.bodyCn}" }
+      },
+      "data": {
+        "fontSize":      { "value": "20px" },
+        "lineHeight":    { "value": "28px" },
+        "fontWeight":    { "value": "500" },
+        "letterSpacing": { "value": "0.02em" },
+        "fontFamilyEn":  { "value": "{typography.fontFamily.dataEn}" }
+      },
+      "dataSmall": {
+        "fontSize":      { "value": "14px" },
+        "lineHeight":    { "value": "20px" },
+        "fontWeight":    { "value": "500" },
+        "letterSpacing": { "value": "0.02em" },
+        "fontFamilyEn":  { "value": "{typography.fontFamily.dataEn}" }
+      },
+      "buttonLg": {
+        "fontSize":      { "value": "16px" },
+        "lineHeight":    { "value": "24px" },
+        "fontWeight":    { "value": "600" },
+        "letterSpacing": { "value": "0.01em" }
+      },
+      "buttonMd": {
+        "fontSize":      { "value": "14px" },
+        "lineHeight":    { "value": "20px" },
+        "fontWeight":    { "value": "600" },
+        "letterSpacing": { "value": "0.01em" }
+      },
+      "buttonSm": {
+        "fontSize":      { "value": "12px" },
+        "lineHeight":    { "value": "16px" },
+        "fontWeight":    { "value": "600" },
+        "letterSpacing": { "value": "0.02em" }
+      }
+    }
+  },
+
+  "spacing": {
+    "description": "4px base grid / 4px 基准网格",
+    "unit": { "value": "4px" },
+    "0":    { "value": "0px" },
+    "1":    { "value": "4px",   "description": "微间距 / Micro" },
+    "2":    { "value": "8px",   "description": "紧凑 / Compact" },
+    "3":    { "value": "12px",  "description": "小间距 / Small" },
+    "4":    { "value": "16px",  "description": "默认 / Default ★" },
+    "5":    { "value": "20px",  "description": "中间距 / Medium" },
+    "6":    { "value": "24px",  "description": "大间距 / Large" },
+    "8":    { "value": "32px",  "description": "分区 / Section" },
+    "10":   { "value": "40px",  "description": "大分区 / Large section" },
+    "12":   { "value": "48px",  "description": "页面区块 / Page block" },
+    "16":   { "value": "64px",  "description": "页面大区块 / Major section" },
+    "20":   { "value": "80px",  "description": "页眉/页脚 / Header/Footer" },
+    "safeAreaTop":    { "value": "env(safe-area-inset-top, 0px)",    "description": "iOS 安全区顶部" },
+    "safeAreaBottom": { "value": "env(safe-area-inset-bottom, 0px)", "description": "iOS 安全区底部" }
+  },
+
+  "borderRadius": {
+    "none":   { "value": "0px" },
+    "xs":     { "value": "4px",   "description": "标签/Badge" },
+    "sm":     { "value": "8px",   "description": "输入框/小组件" },
+    "md":     { "value": "12px",  "description": "按钮/常规卡片 ★" },
+    "lg":     { "value": "16px",  "description": "大卡片/酒款卡片" },
+    "xl":     { "value": "20px",  "description": "模态框/底部弹窗" },
+    "2xl":    { "value": "24px",  "description": "特大圆角" },
+    "full":   { "value": "9999px","description": "胶囊/圆形" }
+  },
+
+  "shadow": {
+    "none":   { "value": "none" },
+    "xs":     { "value": "0px 1px 2px rgba(30, 26, 43, 0.04)", "description": "微阴影 / Subtle" },
+    "sm":     { "value": "0px 2px 4px rgba(30, 26, 43, 0.06)", "description": "小阴影 / Small" },
+    "md":     { "value": "0px 2px 12px rgba(30, 26, 43, 0.06)", "description": "中阴影 / Medium — 卡片默认 ★" },
+    "lg":     { "value": "0px 4px 24px rgba(30, 26, 43, 0.08)", "description": "大阴影 / Large — 浮层" },
+    "xl":     { "value": "0px 8px 40px rgba(30, 26, 43, 0.12)", "description": "超大阴影 / X-Large — 模态框" },
+    "inner":  { "value": "inset 0px 1px 2px rgba(30, 26, 43, 0.06)", "description": "内阴影 / Inner" },
+    "brand":  { "value": "0px 4px 16px rgba(139, 34, 82, 0.20)", "description": "品牌阴影 / Brand glow — 主按钮" },
+    "dark": {
+      "xs":   { "value": "0px 1px 2px rgba(0, 0, 0, 0.20)" },
+      "sm":   { "value": "0px 2px 4px rgba(0, 0, 0, 0.24)" },
+      "md":   { "value": "0px 2px 12px rgba(0, 0, 0, 0.24)" },
+      "lg":   { "value": "0px 4px 24px rgba(0, 0, 0, 0.32)" },
+      "xl":   { "value": "0px 8px 40px rgba(0, 0, 0, 0.40)" },
+      "brand":{ "value": "0px 4px 16px rgba(199, 91, 142, 0.30)" }
+    }
+  },
+
+  "motion": {
+    "duration": {
+      "instant":  { "value": "50ms",   "description": "瞬间 / Instant — hover 色变" },
+      "fast":     { "value": "150ms",  "description": "快速 / Fast — 按钮状态、图标旋转" },
+      "normal":   { "value": "250ms",  "description": "常规 / Normal — 展开折叠、淡入淡出 ★" },
+      "slow":     { "value": "350ms",  "description": "缓慢 / Slow — 页面切换、模态框" },
+      "slower":   { "value": "500ms",  "description": "更慢 / Slower — 复杂动画、加载" },
+      "slowest":  { "value": "800ms",  "description": "最慢 / Slowest — 引导动画、品鉴动画" }
+    },
+    "easing": {
+      "default":      { "value": "cubic-bezier(0.25, 0.1, 0.25, 1.0)",   "description": "默认缓动 / Default ease" },
+      "easeIn":       { "value": "cubic-bezier(0.42, 0, 1.0, 1.0)",      "description": "加速进入 / Ease in — 退出动画" },
+      "easeOut":      { "value": "cubic-bezier(0, 0, 0.58, 1.0)",        "description": "减速退出 / Ease out — 进入动画" },
+      "easeInOut":    { "value": "cubic-bezier(0.42, 0, 0.58, 1.0)",     "description": "平滑 / Ease in-out — 过渡动画" },
+      "spring":       { "value": "cubic-bezier(0.175, 0.885, 0.32, 1.275)", "description": "弹性 / Spring — 按钮按下、弹出" },
+      "wineDropBounce": { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "description": "酒滴弹跳 / Wine drop bounce — 加载动画" },
+      "pourSmooth":   { "value": "cubic-bezier(0.4, 0.0, 0.2, 1.0)",    "description": "倒酒丝滑 / Pour smooth — 列表滑入" }
+    },
+    "spring": {
+      "gentle":  { "value": { "tension": 120, "friction": 14, "mass": 1 }, "description": "柔和弹簧 / Gentle" },
+      "default": { "value": { "tension": 180, "friction": 12, "mass": 1 }, "description": "默认弹簧 / Default" },
+      "bouncy":  { "value": { "tension": 300, "friction": 10, "mass": 1 }, "description": "弹跳弹簧 / Bouncy — 酒滴" },
+      "stiff":   { "value": { "tension": 400, "friction": 20, "mass": 1 }, "description": "硬弹簧 / Stiff — 快速响应" }
+    }
+  },
+
+  "breakpoint": {
+    "mobile":  { "value": "0px",    "max": "767px",  "description": "手机 / Mobile" },
+    "tablet":  { "value": "768px",  "max": "1023px", "description": "平板 / Tablet" },
+    "desktop": { "value": "1024px", "max": "1439px", "description": "桌面 / Desktop" },
+    "wide":    { "value": "1440px", "max": "∞",      "description": "宽屏 / Wide" }
+  },
+
+  "sizing": {
+    "icon": {
+      "xs":    { "value": "16px" },
+      "sm":    { "value": "20px", "description": "紧凑图标 / Compact icon" },
+      "md":    { "value": "24px", "description": "标准图标 / Standard icon ★" },
+      "lg":    { "value": "32px", "description": "展示图标 / Display icon" },
+      "xl":    { "value": "40px" },
+      "2xl":   { "value": "48px" }
+    },
+    "avatar": {
+      "xs":    { "value": "24px" },
+      "sm":    { "value": "32px", "description": "聊天头像 / Chat avatar" },
+      "md":    { "value": "40px", "description": "列表头像 / List avatar" },
+      "lg":    { "value": "56px" },
+      "xl":    { "value": "80px", "description": "个人资料 / Profile" },
+      "2xl":   { "value": "120px" }
+    },
+    "touchTarget": {
+      "minimum": { "value": "44px", "description": "最小触控区域 (WCAG)" }
+    },
+    "contentMaxWidth": {
+      "mobile":  { "value": "100%" },
+      "tablet":  { "value": "720px" },
+      "desktop": { "value": "960px" },
+      "wide":    { "value": "1200px" }
+    }
+  },
+
+  "zIndex": {
+    "base":       { "value": 0 },
+    "card":       { "value": 1 },
+    "dropdown":   { "value": 10 },
+    "sticky":     { "value": 20,   "description": "粘性导航" },
+    "overlay":    { "value": 30,   "description": "遮罩层" },
+    "modal":      { "value": 40,   "description": "模态框" },
+    "toast":      { "value": 50,   "description": "Toast 通知" },
+    "tooltip":    { "value": 60,   "description": "工具提示" }
+  },
+
+  "opacity": {
+    "disabled":   { "value": 0.4,  "description": "禁用态" },
+    "overlay":    { "value": 0.5,  "description": "遮罩层" },
+    "secondary":  { "value": 0.6,  "description": "次要元素" },
+    "hover":      { "value": 0.08, "description": "悬停叠加" },
+    "pressed":    { "value": 0.12, "description": "按下叠加" },
+    "wineStain":  { "value": 0.05, "description": "酒渍纹理 3-8%" }
+  }
+}

@@ -1,0 +1,128 @@
+# 📊 Wine Advisor - 进度追踪
+
+## 状态: 🚀 启动中
+
+### Phase 1: MVP 开发
+- [x] 项目初始化 (Next.js + TypeScript + Tailwind)
+- [x] AI 品酒顾问 System Prompt 设计
+- [x] 对话式 UI 开发（品酒主题配色）
+- [x] API 路由 (Claude 集成 + 流式)
+- [x] 流式响应 (SSE)
+- [x] 响应式设计（移动端优先）
+- [x] Build 通过
+- [ ] 功能测试
+- [ ] 部署到 Vercel
+
+### 问题 & Bug 追踪
+- SWC binary code signature issue on macOS ARM → 用 codesign -s - 修复
+
+### 迭代记录
+- **v0.1** - MVP 核心功能完成
+- **v0.2** - Markdown渲染 + AI头像 + 新对话按钮 + 气泡优化 + Gemini 后端
+- **v0.3** - 对话持久化 + 错误重试 + 移动端适配 + 品牌加载动画
+- **v0.3.2** - 修复表格渲染 + 流式解析优化
+- **v0.3.3** - 标题可点击回首页
+- **v0.4** - 拍照/上传图片 + AI图像识别
+- **v0.5** - 我的酒窖 + 拍照智能分流 + 品酒评分
+- **v0.6** - 🎯 场景化UX重设计（餐厅/选购/识酒/品酒四大入口）
+- **v0.3** - 品牌级 UI/UX 全面重构 (2026-02-27)
+  - **核心功能**
+    - P0: 对话历史 localStorage 持久化，刷新不丢失；确认清除对话弹窗（带 blur 遮罩 + 弹性动画）
+    - P1: 错误提示细化（429/503/5xx 分类）+ 重试按钮重发最后一条消息
+    - P1: 新对话按钮：刷新 → "+"，90° 旋转 hover 效果
+    - P1: iOS safe-area-inset、viewport-fit=cover、触摸反馈、16px 防缩放
+    - P2: 流式打字机闪烁光标 ▋
+    - P2: CSS 摇酒杯加载动画 + "品鉴中…" shimmer
+    - P2: 智能自动滚动 + "回到最新" 浮动按钮
+  - **设计升级**
+    - Header: 磨砂玻璃效果 + 金色装饰线 + 标题渐变 shimmer + 葡萄藤 SVG 纹饰
+    - 空状态: 酒瓶剪影（CSS mask）+ 葡萄点阵装饰 + 酒渍圆环 + hero 光晕效果
+    - 消息气泡: 玻璃拟态 (glassmorphism) + 分层阴影 + hover 阴影加深
+    - 头像: 呼吸发光动画（加载时加速）
+    - 快捷按钮: 渐变覆盖层 hover + 上浮阴影 + 图标前缀
+    - 输入框: 磨砂玻璃 + 金色 focus 光环 + 发送按钮缩放/脉冲动效
+    - 页脚: 金色渐变文字
+    - 全局: 色彩系统扩展（wine-rose, wine-blush, wine-gold-light）
+  - **状态过渡**
+    - 空状态 ↔ 对话状态: 淡入淡出 + 缩放 + 模糊过渡（viewState FSM）
+    - 用户消息: 右侧弹入动画 (sendBubble)
+    - AI 消息: 左侧滑入动画 (assistantAppear)
+    - 确认弹窗: backdrop-blur + 弹性缩放
+    - 清除对话: 对话淡出 → 空状态淡入
+  - **🎯 猜你喜欢 — 味蕾画像系统**
+    - 关键词字典: 16 个产区 / 16 个品种 / 12 个风格 / 5 个价位区间
+    - 实时提取: 每条 AI 回复解析关键词，更新频次计数
+    - localStorage 持久化 (wine-advisor-taste-profile)
+    - 标签云可视化: 产区📍 / 品种🍇 / 风格✨ / 价位💰 四色分类标签
+    - 个性化推荐: 基于 top-N 偏好自动生成 4 条推荐 prompt
+    - 对话中: 输入框上方可折叠面板
+    - 空状态: 首页中部金色"猜你喜欢"推荐区 + 迷你标签云
+  - **微交互**
+    - 发送按钮 pulse 动画
+    - 新对话按钮 90° 旋转
+    - 快捷按钮 -2px 上浮
+    - 标签逐个 fade-in（delay stagger）
+    - 推荐按钮右侧金色渐变光
+    - 滚动条渐变美化
+    - 选区高亮色
+- **v0.3.1** - 设计感大升级 + 猜你喜欢 (2026-02-27)
+  - 🎨 **视觉设计大幅提升**
+    - Header 底部金色渐变装饰线 + ✦ 金色点缀符号
+    - 空状态页面增加品酒氛围装饰：SVG 葡萄藤纹理、酒瓶剪影（极淡背景装饰）
+    - 快捷按钮升级：emoji icon + 玻璃拟态背景 + hover scale/shadow 微动画 + 按下缩放反馈
+    - 消息气泡加微妙阴影，hover 时上浮 1px + shadow 增大
+    - 输入框 focus 时渐变发光边框（wine-deep + accent 双色晕染）
+    - 颜色系统扩展：新增 --wine-accent(#D4A574)、--wine-gold-warm(#C9A96E) 点缀色
+    - 滚动条美化：4px 超窄、酒红渐变色、支持 Firefox scrollbar-color
+    - 底部版权区域：左右金色渐变装饰线 + accent 色文字
+    - 大号酒杯 emoji 浮动动画（gentleFloat 3s infinite）
+  - 🔄 **页面切换过渡动画**
+    - 空状态 → 对话：fade-out + slide-up 过渡（280ms 延迟切换）
+    - 新消息 slide-up + fade-in（messageSlideIn 0.4s cubic-bezier）
+    - "新对话" 点击时当前对话 fade-out → 空状态 fade-in
+    - 快捷按钮交错入场动画（stagger-1~4，quickBtnEnter keyframes）
+    - Header/欢迎区域页面加载渐入动画
+  - 🎯 **新功能：猜你喜欢（味蕾画像）**
+    - localStorage 维护 tasteProfile 对象（regions/grapes/styles/priceRange/occasions）
+    - AI 回复完成后自动关键词匹配提取画像信息（支持中英文关键词）
+    - 覆盖产区 15+、品种 13+、风格 10+、场合 8+ 个关键词映射
+    - 空状态下方显示"🎯 根据你的口味"板块：标签云 + 个性化推荐按钮
+    - 标签样式：圆角渐变背景 + hover 上浮 + 分类 emoji 图标
+    - 推荐按钮：最多 4 个，基于画像动态生成，hover 渐变填充效果
+  - 💎 **微交互打磨**
+    - 发送按钮：按下 scale(0.85) + sendFly 弹跳动画 + 有内容时 shadow 高亮
+    - AI 头像：流式输出/加载时呼吸脉冲效果（breathe 2s infinite）
+    - 消息气泡 hover 上浮 translateY(-1px) + shadow 增大（msg-bubble class）
+    - 页面加载 header 渐入（headerFadeIn 0.6s）+ 欢迎区域延迟渐入（welcomeFadeIn 0.7s）
+    - 快捷按钮点击 scale 缩放 + 颜色填充伪元素动画（::before opacity 过渡）
+- **v0.5** - 我的酒窖 + 拍照智能分流 + 品酒评分 (2026-02-27)
+  - 📸 **拍照智能分流**
+    - 用户上传酒图后，AI 识别酒款并显示两个内嵌选择按钮
+    - 🛒 想买模式：AI 给评价 + 评分(/100) + 推荐 → 「📖 加入心愿清单」按钮
+    - 🍷 在喝模式：AI 给 Tasting Notes → 「⭐ 记录品酒体验」按钮 → 评分弹窗
+    - System Prompt 升级：引导 AI 在识别酒款后加"请问你现在是..."触发分流
+  - 🔘 **消息内嵌动作按钮系统**
+    - MessageAction 接口：id/label/icon/message/action/data/clicked
+    - 消息气泡内渲染 styled 按钮，点击后标记 clicked=true 变灰防重复
+    - 自动检测：酒款识别→分流按钮 / 想买回复→心愿清单按钮 / 在喝回复→评分按钮
+    - 按钮样式：渐变背景 + hover 色变 + active scale + 禁用态
+  - 🍷 **我的酒窖**
+    - localStorage `wineCellar` 持久化存储 WineEntry 数组
+    - 酒窖页面：全屏覆盖 + 滑入动画 + ✦ 标题装饰
+    - 双 Tab 切换：「🍷 品过的酒」/「🛒 想买的酒」+ 滑动指示条动画
+    - 酒卡片：缩略图 + 酒名 + 评分徽章(色彩分级) + 日期产区 + 笔记摘要
+    - 卡片 hover 微浮 + 阴影 + 删除按钮 + 右键/长按删除确认
+    - 空酒窖引导："还没有记录，拍一张酒标开始吧 📷"
+    - Header 右侧 📖 酒窖按钮（和 + 新对话并排）
+  - ⭐ **品酒评分弹窗**
+    - 半透明 blur 遮罩 + 底部滑出卡片动画
+    - 1-100 滑块评分 + 动态数字显示（色彩随分数变化：灰→金→酒红）
+    - 自定义 range slider 样式（渐变轨道 + 白色圆形滑块 + 按下放大）
+    - 品酒备注文字输入框
+    - 「存入酒窖 🍷」确认按钮 + 渐变背景 + 阴影
+    - 提交后 Toast 成功提示
+  - 🔔 **Toast 通知**
+    - 顶部居中滑入动画 + 2.5s 自动消失
+    - 酒红深色背景 + 白字 + blur 效果
+  - 🖼️ **图片缩略图压缩**
+    - 入窖时自动压缩图片为 200px 宽缩略图（节省 localStorage 空间）
